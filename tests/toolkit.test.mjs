@@ -206,7 +206,7 @@ test("codegen is unreleased branch code, never runnable today", () => {
   const codegen = read("skills/queek-types/references/codegen.md");
   assert.match(codegen, /UNRELEASED/, "unreleased status stated");
   assert.match(codegen, /feat\/queek-app/, "branch cited");
-  assert.match(codegen, /cc97789/, "branch commit cited");
+  assert.match(codegen, /39b0bb6/, "branch tip cited");
   assert.match(codegen, /PR #9/, "PR cited");
   assert.match(codegen, /0\.13\.0/, "published version that lacks it cited");
   assert.match(codegen, /packages\/cli\/src\/commands\/app\/codegen\.ts/, "implementation file cited");
@@ -217,6 +217,29 @@ test("codegen is unreleased branch code, never runnable today", () => {
   const fresh = read("skills/queek-types/references/freshness.md");
   assert.match(fresh, /feat\/queek-app/, "freshness cites the branch");
   assert.match(fresh, /0\.13\.0/, "freshness cites the published version");
+});
+
+test("no driftable file:line source cites anywhere under skills/", () => {
+  // Symbol-only citations: a backticked `file.ext:<digits>` cite rots on
+  // every edit, so every reference file must cite file + symbol/const/
+  // function name instead. This scans every markdown file under skills/
+  // (SKILL.md + references/) and fails on any backticked source cite with
+  // a line number.
+  const lineCite = /`[\w./-]+\.(ts|md|php|toml|mjs|json):\d/;
+  const walk = (dir, out = []) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full, out);
+      else if (/\.md$/.test(entry.name)) out.push(full);
+    }
+    return out;
+  };
+  const files = walk(skillsDir);
+  assert.ok(files.length >= 15, "scans a real file set");
+  for (const file of files) {
+    const body = readFileSync(file, "utf8");
+    assert.doesNotMatch(body, lineCite, `${file} carries a driftable :<digits> cite`);
+  }
 });
 
 test("docs URLs mentioned in skills resolve to real contract hosts", () => {

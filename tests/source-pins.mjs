@@ -15,15 +15,15 @@ export const DEFAULT_ROOTS = {
 
 export const PINS = {
   sdk: "df72a4863cc5481f04d1f6adb8d4b970a8c1124f",
-  cli: "cc97789ffeb303a949024284b7723924027c0d1b",
+  cli: "39b0bb63ff2ebc3147e8f7bb84277e87afb731f9",
   backend: "4c8a56cb64edaa7a3beb735eade3dd033328c8db",
 };
 
 // {root, file, ref?, symbols[]} — ref set reads via `git show <ref>:<file>`.
 export const CHECKS = [
-  { root: "sdk", file: "src/frame.ts", symbols: ["AppOutboundMessage", "AppInboundMessage", "BRIDGE_VERSION", "APP_SOURCE", "DASHBOARD_SOURCE", "MAX_HEADING_LENGTH", "isAllowedOpenTarget", "parseInboundMessage", "clipOutbound", "resourceType", "sdkVersion"] },
+  { root: "sdk", file: "src/frame.ts", symbols: ["AppOutboundMessage", "AppInboundMessage", "BRIDGE_VERSION", "APP_SOURCE", "DASHBOARD_SOURCE", "MAX_HEADING_LENGTH", "MAX_TOAST_LENGTH", "MAX_PATH_LENGTH", "MAX_TARGET_LENGTH", "isAllowedOpenTarget", "parseInboundMessage", "parseOutboundMessage", "clipOutbound", "ResourceItem", "PickResourceRequest", "BridgeTheme", "resourceType", "sdkVersion"] },
   { root: "sdk", file: "src/signatures.ts", symbols: ["secretKeyBytes", "verifyQueekSignature", "signQueekPayload", "MAX_TIMESTAMP_SKEW_SECONDS", "SECRET_PREFIX", "v1,"] },
-  { root: "sdk", file: "src/proxy.ts", symbols: ["signProxyQuery", "buildProxyCanonicalString", "PROXY_KID_PARAM", "verifyProxyDelivery", "handleProxyRequest", "method_not_allowed"] },
+  { root: "sdk", file: "src/proxy.ts", symbols: ["signProxyQuery", "buildProxyCanonicalString", "PROXY_KID_PARAM", "PROXY_NONCE_PARAM", "verifyProxyQuery", "proxySkewExceeded", "timingSafeEqual", "verifyProxyDelivery", "handleProxyRequest", "method_not_allowed"] },
   { root: "sdk", file: "src/handoff.ts", symbols: ["InstallData", "webhook_secret", "proxy_secret", "embed_secret", "INSTALL_EVENT", "app/resync"] },
   { root: "sdk", file: "src/install-handlers.ts", symbols: ["guard", "buildInstallationRecord", "handleInstallDelivery", "handleInstallRequest", "saveResyncedInstallation", "install_failed", "uninstall_failed", "settings_failed", "unknown_route", "method_not_allowed"] },
   { root: "sdk", file: "src/app-auth.ts", symbols: ["loadAppCredential", "APP_PRIVATE_KEY", "APP_KEY_ID", "APP_SLUG", "APP_JWT_SKEW_SECONDS", "APP_JWT_TTL_SECONDS", "TOKEN_VALIDITY_SKEW_SECONDS", "invalid_client", "app_token_revoked", "app_installation_gone", "app_installation_pending", "resync_cooldown", "too_many_requests"] },
@@ -39,7 +39,7 @@ export const CHECKS = [
   { root: "cli", file: "src/commands/app/deploy.ts", symbols: ["signing_secret", ".env.local", "QUEEK_APP_SECRET"] },
   { root: "cli", file: "src/commands/app/codegen.ts", symbols: ["AppCodegen", "types/merchant.ts", "codegen.json"] },
   { root: "sdk", file: "scripts/gen-merchant-types.mjs", symbols: ["/orders/import", "openapi-typescript", "scramble:export --api=merchant"] },
-  { root: "cli", file: "src/lib/app-manifest.ts", symbols: ["TOP_LEVEL_TOML_KEYS", "MANIFEST_KEYS", "checkNav", "checkExtensions", "Unknown field"] },
+  { root: "cli", file: "src/lib/app-manifest.ts", symbols: ["TOP_LEVEL_TOML_KEYS", "MANIFEST_KEYS", "demo_url", "video_url", "checkNav", "checkExtensions", "checkCappedUrl", "isAllowedVideoHost", "secretProblem", "unknownField", "Unknown field"] },
   { root: "booking", file: "queek.app.toml", symbols: ["[[extensions.nav]]", "merchant_page_url", "[[extensions.blocks]]"] },
   { root: "backend", file: "app/Services/Apps/SubmissionCheckService.php", ref: "origin/master", symbols: ["CHECK_LISTING", "CHECK_TESTED", "CHECK_ENDPOINTS", "CHECK_EMBEDDED_FRAME", "CHECK_DEMO_PRESENCE", "LEVEL_ERROR", "LEVEL_WARNING", "FRESHNESS_HOURS", "WARNING_KEYS", "CHECK_LABELS", "function evaluate", "storedFresh", "isFresh", "listingCheck", "listingMessage", "testedCheck", "embeddedMessage"] },
   { root: "backend", file: "routes/vendor-api.php", ref: "origin/master", symbols: ["apps/{app}/versions/{sequence}/submission", "apps/{app}/versions/{sequence}/withdraw", "apps/{app}/submit"] },

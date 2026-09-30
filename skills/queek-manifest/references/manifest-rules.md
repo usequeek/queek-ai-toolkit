@@ -1,12 +1,12 @@
 # Manifest validation rules
 
 Sources: `@usequeek/cli` `src/lib/app-manifest.ts` (repo:
-`theme-tools-wt-app/packages/cli`) and `queek_backend`
-`app/Services/Apps/AppManifestValidator.php` (`topLevelKeys()`,
-`rejectUnknown` — on `origin/master`). Both validators fail closed:
-unknown fields are rejected, required fields throw.
+`theme-tools-wt-app/packages/cli`, CLI `feat/queek-app` branch at `39b0bb6`)
+and `queek_backend` `app/Services/Apps/AppManifestValidator.php`
+(`topLevelKeys()`, `rejectUnknown` — on `origin/master`). Both validators
+fail closed: unknown fields are rejected, required fields throw.
 
-## Top-level TOML keys (all 16 — `TOP_LEVEL_TOML_KEYS`, `app-manifest.ts:37-40`)
+## Top-level TOML keys (all 16 — `TOP_LEVEL_TOML_KEYS`)
 
 `slug`, `handle`, `name`, `version` (semver), `distribution`, `icon`
 (`ICON_RE` — lowercase/digits/`_`/`-`), `developer`, `category`,
@@ -16,37 +16,41 @@ unknown fields are rejected, required fields throw.
 ## Required
 
 - `slug` (matches `SLUG_RE`), `name`, `scopes` (non-empty list — "The
-  scopes field is required (at least one)"; `app-manifest.ts:278-280`),
-  `install_url`, `uninstall_url` (`AppManifest` type, `app-manifest.ts:28`).
+  scopes field is required (at least one)"), `install_url`,
+  `uninstall_url` (`AppManifest` type).
 - Manifest key inventory must never contain anything that smells like a
-  secret (`secretProblem`, `app-manifest.ts:61`): secrets never live in the
-  toml.
+  secret (`secretProblem`): secrets never live in the toml.
 
-## Server-side keys and the `demo_url` / `video_url` gap
+## Server-side keys and the `demo_url` / `video_url` gap (CLOSED)
 
-- The backend accepts 27 top-level keys (`AppManifestValidator::topLevelKeys()`):
-  the flattened manifest shape (`MANIFEST_KEYS` in the CLI lists 25) PLUS
+- The backend accepts 27 top-level keys
+  (`AppManifestValidator::topLevelKeys()` on `origin/master`): the
+  flattened manifest shape (`MANIFEST_KEYS` in the CLI lists 27) including
   `demo_url` and `video_url` (rules `nullable|string|max:2048`;
-  `video_url` must be a YouTube or Vimeo URL;
-  `AppManifestValidator.php:130-131,332-341,371-372`).
-- GAP (30/9/26): the CLI's `MANIFEST_KEYS` (25) and `TOP_LEVEL_TOML_KEYS`
-  (16) do NOT include `demo_url` / `video_url`, so `queek app deploy`
-  rejects what the backend and the review checklist (`demo_presence` /
-  `demo_host`) accept. Until the CLI is updated, set these two keys via the
-  backend path, not the toml.
+  `video_url` must be a YouTube or Vimeo URL — backend
+  `isAllowedVideoHost`, same error text as the CLI).
+- GAP (closed 30/9/26 in CLI commit `6490a4d`, merged at `39b0bb6`): the
+  CLI's `MANIFEST_KEYS` listed 25 and rejected the two keys; it now lists
+  all 27, and the `[listing]` path accepts and validates them
+  (`checkCappedUrl` on both, `isAllowedVideoHost` on `video_url` with the
+  same YouTube-or-Vimeo error text, mirroring the server-side
+  `assertAppUrl` guard). Set them under `[listing]` in the toml — the
+  flattened manifest carries them through.
+- TOML-level vs manifest-level is a deliberate distinction, not a second
+  gap: `TOP_LEVEL_TOML_KEYS` (16) still has no `demo_url` / `video_url`
+  because they live under `[listing]`, not at the top level. Only the
+  flattened manifest shape (`MANIFEST_KEYS`, 27) carries them.
 
-## Extensions (`checkExtensions`, `app-manifest.ts:390-421`)
+## Extensions (`checkExtensions`)
 
 - `extensions` must be a table. Allowed keys ONLY: `proxy`, `blocks`,
-  `merchant_page_url`, `nav` (`app-manifest.ts:394-395`) — anything else is
-  an unknown-field error.
+  `merchant_page_url`, `nav` — anything else is an unknown-field error
+  (`unknownField`).
 - `extensions.proxy.url` is required when `proxy` is present; allowed proxy
-  keys ONLY: `url`, `subpath`, `share_customer_id`
-  (`app-manifest.ts:401-406`).
-- `extensions.blocks` must be a list of `[[extensions.blocks]]` tables
-  (`app-manifest.ts:420-421`).
+  keys ONLY: `url`, `subpath`, `share_customer_id`.
+- `extensions.blocks` must be a list of `[[extensions.blocks]]` tables.
 
-## Nav (`checkNav`, `app-manifest.ts`)
+## Nav (`checkNav`)
 
 - `extensions.nav` must be a list of `[[extensions.nav]]` tables with
   exactly `label` + `path` — any other key is rejected.

@@ -3,10 +3,10 @@
 Sources: `queek_backend/config/scramble.php` (`API_VERSION`),
 `queek_backend/app/Support/Api/ApiContract.php` (`VERSION_HEADER`),
 `queek_backend/app/Providers/ScrambleServiceProvider.php` (hash header,
-on `origin/master`), `@usequeek/app-sdk`
-`scripts/gen-merchant-types.mjs` + `README.md:308`, the live spec
-`https://api.usequeek.com/docs/merchant.json` (fetched 30/9/26), and plan
-`app-live-types-and-ai-toolkit.md` G1 (policy).
+freshness-pin block, on `origin/master`), `@usequeek/app-sdk`
+`scripts/gen-merchant-types.mjs` + README § API surface (client bullet),
+the live spec `https://api.usequeek.com/docs/merchant.json` (fetched
+30/9/26), and plan `app-live-types-and-ai-toolkit.md` G1 (policy).
 
 ## Pins (all verified in code or the live spec)
 
@@ -28,9 +28,10 @@ on `origin/master`), `@usequeek/app-sdk`
 
 1. Types never auto-update. The SDK's bundled generated types
    (`src/merchant-schema.ts`, via `openapi/merchant.json`) are a
-   compatibility snapshot, not the freshness mechanism (`README.md:308`:
-   "Types come from `openapi/merchant.json`, the committed snapshot of the
-   live contract").
+   compatibility snapshot, not the freshness mechanism: per the README §
+   API surface client bullet, the bundled default does NOT auto-update and
+   `openapi/merchant.json` stays in-repo as the reference input to
+   codegen, unshipped in the published package.
 2. After every backend deploy that touches the Merchant API, re-run
    codegen (`npm run gen:merchant [url-or-path]`, or `queek app codegen`
    once the `feat/queek-app` branch ships — PR #9, in the next

@@ -1,9 +1,11 @@
 # Bridge message types (the contract)
 
-Source: `@usequeek/app-sdk` `src/frame.ts:60-133`. (Repo:
-`app-sdk-wt-bridge`.) Import these types; never re-declare the strings.
+Source: `@usequeek/app-sdk` `src/frame.ts` (`AppOutboundMessage`,
+`AppInboundMessage`, `ResourceItem`, `PickResourceRequest`,
+`BridgeTheme`). (Repo: `app-sdk-wt-bridge`.) Import these types; never
+re-declare the strings.
 
-## App → dashboard (`AppOutboundMessage`, `frame.ts:88-111`)
+## App → dashboard (`AppOutboundMessage`)
 
 | `type` | fields |
 |---|---|
@@ -19,7 +21,7 @@ Source: `@usequeek/app-sdk` `src/frame.ts:60-133`. (Repo:
 
 Every message carries `source` = the app source constant (`APP_SOURCE`).
 
-## Dashboard → app (`AppInboundMessage`, `frame.ts:113-133`)
+## Dashboard → app (`AppInboundMessage`)
 
 | `type` | fields |
 |---|---|
@@ -32,14 +34,14 @@ Every message carries `source` = the app source constant (`APP_SOURCE`).
 | `resource-picked` | `items: ResourceItem[]`, `requestId?: string` |
 | `resource-pick-cancelled` | `requestId?: string` |
 
-`ResourceItem` is `{ p_id: string, title: string, image?: string }`
-(`frame.ts:60-64`). `PickResourceRequest` (`frame.ts:66-72`) is the same
-shape as the `pick-resource` message: `resourceType: "product"` only.
+`ResourceItem` is `{ p_id: string, title: string, image?: string }`.
+`PickResourceRequest` is the same shape as the `pick-resource` message:
+`resourceType: "product"` only.
 
 ## Versioning
 
-`BridgeTheme.capabilities` (`frame.ts:74-86`): the dashboard declares its
-capabilities (e.g. `["pick-resource"]`) on the handshake `theme` message.
-Absent on legacy dashboards — the app must then assume the v0 set
-(ready/token/resize only). `bridge` is the dashboard's bridge version
-(`"1"`); absent on legacy dashboards.
+`BridgeTheme.capabilities`: the dashboard declares its capabilities (e.g.
+`["pick-resource"]`) on the handshake `theme` message. Absent on legacy
+dashboards — the app must then assume the v0 set (ready/token/resize
+only). `bridge` is the dashboard's bridge version (`"1"`); absent on
+legacy dashboards.

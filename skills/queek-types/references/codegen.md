@@ -5,7 +5,7 @@ Source: `@usequeek/app-sdk` `scripts/gen-merchant-types.mjs`
 its logic verbatim; do not invent a second flow.
 
 `queek app codegen` — UNRELEASED: it lives in the CLI `feat/queek-app`
-branch at `cc97789` (github.com/usequeek/theme-tools, PR #9, OPEN, not
+branch at `39b0bb6` (github.com/usequeek/theme-tools, PR #9, OPEN, not
 merged to main; npm `@usequeek/cli` 0.13.0 does NOT contain it — available
 from the next `@usequeek/cli` release). It writes app-owned
 `types/merchant.ts` + the recorded spec hash in `.queek/codegen.json`
