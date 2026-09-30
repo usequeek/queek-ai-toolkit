@@ -2,9 +2,11 @@
 
 Sources: `queek_backend/config/scramble.php:36`,
 `queek_backend/app/Support/Api/ApiContract.php:23`,
-`@usequeek/app-sdk` `scripts/gen-merchant-types.mjs` + `README.md:308`,
-the live spec `https://api.usequeek.com/docs/merchant.json` (fetched
-30/9/26), and plan `app-live-types-and-ai-toolkit.md` G1/B2 (policy only).
+`queek_backend/app/Providers/ScrambleServiceProvider.php` (hash header,
+on `origin/master`), `@usequeek/app-sdk`
+`scripts/gen-merchant-types.mjs` + `README.md:308`, the live spec
+`https://api.usequeek.com/docs/merchant.json` (fetched 30/9/26), and plan
+`app-live-types-and-ai-toolkit.md` G1 (policy).
 
 ## Pins (all verified in code or the live spec)
 
@@ -12,10 +14,15 @@ the live spec `https://api.usequeek.com/docs/merchant.json` (fetched
   (`config/scramble.php:36`; live spec serves `info.version: v1`).
 - Runtime version header: `X-Queek-Api-Version` (`ApiContract.php:23`,
   `VERSION_HEADER`).
-- "Additive under `v1`" is POLICY from the plan (G1; contract text is B2),
-  NOT a served-spec claim: the live spec (30/9/26) contains no additive or
-  v2-alongside text. Treat it as the rule you code against, not as text you
-  quote from the spec.
+- Spec content hash (B1, landed 30/9/26): `x-queek-spec-sha` rides BOTH the
+  response header and `info.x-queek-spec-sha`, stamped from the exact served
+  bytes so the two can never disagree
+  (`ScrambleServiceProvider.php`, freshness-pin block). Compare the hash
+  your app recorded at codegen time against the live one: a mismatch means
+  re-run codegen.
+- "Additive under `v1`" is POLICY from the plan (G1) AND, since B2 landed
+  30/9/26, served-spec text: `info.description` states "Additive-only
+  under v1 … A breaking change ships as v2 alongside v1". Quote the spec.
 
 ## The rule
 
@@ -25,11 +32,10 @@ the live spec `https://api.usequeek.com/docs/merchant.json` (fetched
    "Types come from `openapi/merchant.json`, the committed snapshot of the
    live contract").
 2. After every backend deploy that touches the Merchant API, re-run
-   codegen (`npm run gen:merchant [url-or-path]`) and commit the diff.
+   codegen (`npm run gen:merchant [url-or-path]`, or `queek app codegen`
+   once it ships — coming in the next CLI release) and commit the diff.
 3. A pinned old snapshot keeps compiling and working; new fields stay
    untyped until you re-run.
-4. What does NOT exist today (verified 30/9/26 — do not claim it): no CLI
-   stale-types warning, no date-versioned spec URL, no `x-queek-spec-sha`
-   (B1 unlanded; the live spec carries no content hash). Freshness is the
-   manual re-run in step 2, full stop. Re-check this section when B1/B2
-   land.
+4. What does NOT exist (verified 30/9/26 — do not claim it): no CLI
+   stale-types warning (dropped by plan Decision — freshness is the manual
+   re-run in step 2, full stop), no date-versioned spec URL.

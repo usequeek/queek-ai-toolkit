@@ -11,7 +11,9 @@ Sources: `@usequeek/app-sdk` `src/client.ts:16-29,165-180,296,335,345,379-384`,
   `https://api.usequeek.com/api/v1/merchant`
 - Auth is the installation credential only: `X-Client-Key: sk_…`
   (`src/client.ts:16-17`). Every call sets it from the client's apiKey
-  (`src/client.ts:335`).
+  (`src/client.ts:335`). The `sk_` shape is corroborated twice: the live
+  spec's `servers` description names test keys as `sk_test_…`, and the SDK
+  logger redacts `sk_(live|test)_` (`src/logger.ts`).
 - In apps, prefer `createInstallationClient({ installationId, apiBase,
   tokens })`, which resolves the installation's token via `acquireToken()`
   and sends it as `X-Client-Key` (`README.md:167-168`). The low-level

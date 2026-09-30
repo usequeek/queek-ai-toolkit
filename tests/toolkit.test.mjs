@@ -156,13 +156,16 @@ test("MUST-5: manifest lists all keys, documents the demo_url gap, labels trimmi
   assert.match(read("skills/queek-manifest/references/manifest-shape.md"), /TRIMMED/, "trimming labeled");
 });
 
-test("MUST-6: additive is plan policy, B1/B2 marked unlanded", () => {
+test("MUST-6: additive is plan policy plus landed spec text, B1/B2 marked landed", () => {
   const fresh = read("skills/queek-types/references/freshness.md");
   assert.match(fresh, /POLICY/, "additive labeled policy");
-  assert.match(fresh, /B2.*unlanded|unlanded.*B2/s, "B2 status stated");
-  assert.match(fresh, /x-queek-spec-sha/, "hash absence named");
-  assert.match(fresh, /B1 unlanded/, "B1 status stated");
+  assert.match(fresh, /B2 landed/, "B2 status stated");
+  assert.match(fresh, /B1, landed|B1 landed/, "B1 status stated");
+  assert.match(fresh, /x-queek-spec-sha/, "hash pin named");
+  assert.match(fresh, /ScrambleServiceProvider/, "hash header source cited");
+  assert.doesNotMatch(fresh, /unlanded/, "no stale unlanded claims remain");
   assert.match(read("skills/queek-types/SKILL.md"), /POLICY/, "skill echoes policy framing");
+  assert.match(read("skills/queek-types/SKILL.md"), /B2 landed/, "skill states B2 landed");
 });
 
 test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
@@ -196,6 +199,15 @@ test("MUST-8: README states the fresh-host install status honestly", () => {
   assert.match(body, /not yet published|pending|unverified/i, "publish/install status disclosed");
   assert.match(body, /npx skills add usequeek\/queek-ai-toolkit/, "skills-add route documented");
   assert.match(body, /npx skills update/, "manual update documented");
+});
+
+test("codegen-as-CLI-command is marked coming, never available", () => {
+  const codegen = read("skills/queek-types/references/codegen.md");
+  assert.match(codegen, /COMING IN THE NEXT CLI RELEASE/, "unreleased status stated");
+  assert.match(codegen, /theme-tools-wt-codegen/, "unreleased home cited");
+  assert.match(codegen, /never tell an agent to run `queek app codegen` today/, "no premature instruction");
+  const fresh = read("skills/queek-types/references/freshness.md");
+  assert.match(fresh, /coming in the next CLI release/, "freshness echoes unreleased status");
 });
 
 test("docs URLs mentioned in skills resolve to real contract hosts", () => {

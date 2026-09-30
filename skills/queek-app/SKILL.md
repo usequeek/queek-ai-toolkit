@@ -11,9 +11,18 @@ metadata:
 Framework-agnostic, Web-standard handlers (`Request` in, `Response` out).
 Read the reference file that fits the task before writing code:
 
-- Install / uninstall / settings handoff → `cat references/install-handoff.md`
+- Install / uninstall / settings handoff, app credentials, embedded-page tokens → `cat references/install-handoff.md`
 - Topic webhooks and app-proxy verification → `cat references/webhooks.md`
 - Calling the Merchant API → `cat references/merchant-client.md`
+
+SDK entry points (`@usequeek/app-sdk`, `package.json` `exports`):
+
+| Import | Carries |
+|---|---|
+| `@usequeek/app-sdk` | handlers, verifiers, clients, store, bridge helpers (`src/index.ts`) |
+| `@usequeek/app-sdk/server` | `verifySessionToken`, `verifyLaunchToken` — server only (`src/server.ts`) |
+| `@usequeek/app-sdk/hono` | `createInstallHandlers`, `createWebhookHandler`, `createProxyHandler` (`src/hono.ts`) |
+| `@usequeek/app-sdk/react` | `QueekProvider`, `useQueek` (`src/react.ts`) |
 
 Rules that apply everywhere in this skill:
 

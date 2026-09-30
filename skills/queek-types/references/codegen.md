@@ -4,6 +4,15 @@ Source: `@usequeek/app-sdk` `scripts/gen-merchant-types.mjs`
 (Repo: `app-sdk-wt-bridge`). This is the reference implementation — reuse
 its logic verbatim; do not invent a second flow.
 
+`queek app codegen` — COMING IN THE NEXT CLI RELEASE. It writes app-owned
+`types/merchant.ts` + the recorded spec hash in `.queek/codegen.json`
+(offline warn + exit 0), but exists only in the unreleased codegen worktree
+(`theme-tools-wt-codegen/packages/cli/src/commands/app/codegen.ts`,
+registered as `app:codegen`) and is NOT in the shipped CLI
+(`theme-tools-wt-app`, verified 30/9/26 — zero `codegen` hits under
+`src/commands/app/`). Until it ships, the SDK script below is the only
+supported path; never tell an agent to run `queek app codegen` today.
+
 ## Command
 
 ```sh
