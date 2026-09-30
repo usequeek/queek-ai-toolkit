@@ -1,8 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { DEFAULT_ROOTS, PINS, CHECKS } from "./source-pins.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => readFileSync(join(root, p), "utf8");
@@ -105,6 +107,95 @@ test("zero telemetry: no posting, tracking, or usage-reporting surface", () => {
       assert.doesNotMatch(body, pattern, `${file} matches ${pattern}`);
     }
   }
+});
+
+test("MUST-1: topic decode vs proxy full-string are split, never mixed", () => {
+  const body = read("skills/queek-app/references/webhooks.md");
+  assert.match(body, /DIFFERENTLY/, "warns the derivations differ");
+  assert.match(body, /secretKeyBytes/, "topic cites the decoder");
+  assert.match(body, /signProxyQuery/, "proxy cites the hex signer");
+  const topicSection = body.split("## App proxy")[0];
+  assert.match(topicSection, /DECODED secret bytes/, "topic heading states decode");
+  assert.doesNotMatch(topicSection, /FULL/, "topic section never claims full-string");
+  assert.doesNotMatch(read("skills/queek-app/SKILL.md"), /never base64-decode/i, "skill rule fixed");
+});
+
+test("MUST-2: handoff names the three secrets, denies only tokens", () => {
+  const body = read("skills/queek-app/references/install-handoff.md");
+  for (const secret of ["webhook_secret", "proxy_secret", "embed_secret"]) {
+    assert.match(body, new RegExp(secret), `names ${secret}`);
+  }
+  assert.match(body, /No store-callable \*token\*/, "narrowed to tokens");
+  assert.doesNotMatch(body, /no per-installation secrets cross/i, "false claim gone");
+});
+
+test("MUST-3: submit routes cite origin/master with version-scoped endpoints", () => {
+  const body = read("skills/queek-review/references/submission-checklist.md");
+  for (const s of ["1129", "1140", "1142", "1138", "submitVersion", "withdraw", "::submission", "SubmissionCheckService", "FRESHNESS"]) {
+    assert.match(body, new RegExp(s.replace(/:/g, ":")), `cites ${s}`);
+  }
+  assert.doesNotMatch(body, /vendor-api\.php:1049/, "stale working-tree line gone");
+});
+
+test("MUST-4: bridge marks dashboard behavior PLANNED, uses exact field names", () => {
+  const body = read("skills/queek-bridge/references/bridge-spec.md");
+  assert.match(body, /PLANNED/, "dashboard half marked planned");
+  assert.match(body, /resourceType/, "exact picker field name");
+  assert.match(body, /sdkVersion/, "ready carries sdkVersion");
+  assert.match(body, /BRIDGE_VERSION/, "dashboard version constant");
+  assert.doesNotMatch(body, /\{\s*type:\s*'product'\s*\}/, "wrong shape gone");
+});
+
+test("MUST-5: manifest lists all keys, documents the demo_url gap, labels trimming", () => {
+  const rules = read("skills/queek-manifest/references/manifest-rules.md");
+  for (const key of ["handle", "version", "distribution", "icon", "developer", "category", "dashboard", "dev", "demo_url", "video_url"]) {
+    assert.match(rules, new RegExp(`\`${key}\``), `rules list ${key}`);
+  }
+  assert.match(rules, /GAP/, "CLI/backend gap documented");
+  assert.match(rules, /27 top-level keys/, "backend count stated");
+  assert.match(read("skills/queek-manifest/references/manifest-shape.md"), /TRIMMED/, "trimming labeled");
+});
+
+test("MUST-6: additive is plan policy, B1/B2 marked unlanded", () => {
+  const fresh = read("skills/queek-types/references/freshness.md");
+  assert.match(fresh, /POLICY/, "additive labeled policy");
+  assert.match(fresh, /B2.*unlanded|unlanded.*B2/s, "B2 status stated");
+  assert.match(fresh, /x-queek-spec-sha/, "hash absence named");
+  assert.match(fresh, /B1 unlanded/, "B1 status stated");
+  assert.match(read("skills/queek-types/SKILL.md"), /POLICY/, "skill echoes policy framing");
+});
+
+test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
+  const roots = { ...DEFAULT_ROOTS, ...JSON.parse(process.env.TOOLKIT_SOURCE_ROOTS ?? "{}") };
+  let checked = 0;
+  let skipped = 0;
+  for (const { root, file, ref, symbols } of CHECKS) {
+    const repo = roots[root];
+    assert.ok(repo, `root configured for ${root}`);
+    if (!existsSync(repo)) {
+      skipped += 1;
+      continue;
+    }
+    let body;
+    if (ref) {
+      body = execSync(`git -C ${JSON.stringify(repo)} show ${ref}:${file}`, { encoding: "utf8", timeout: 30000 });
+    } else {
+      body = readFileSync(join(repo, file), "utf8");
+    }
+    for (const symbol of symbols) {
+      assert.ok(body.includes(symbol), `${root}:${file} contains ${symbol}`);
+      checked += 1;
+    }
+  }
+  t.diagnostic(`symbols checked: ${checked}, repos skipped: ${skipped} (pins: ${Object.values(PINS).map((s) => s.slice(0, 8)).join(", ")})`);
+  if (checked === 0) t.skip("no source checkouts present — symbol guard inactive");
+});
+
+test("MUST-8: README states the fresh-host install status honestly", () => {
+  const body = read("README.md");
+  assert.match(body, /not yet published|pending|unverified/i, "publish/install status disclosed");
+  assert.match(body, /npx skills add usequeek\/queek-ai-toolkit/, "skills-add route documented");
+  assert.match(body, /npx skills update/, "manual update documented");
 });
 
 test("docs URLs mentioned in skills resolve to real contract hosts", () => {

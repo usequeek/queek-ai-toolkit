@@ -10,6 +10,16 @@ Public, MIT. **Zero telemetry**: no skill posts anywhere, no hooks, no
 opt-out flag to set — there is nothing to opt out of. (Shopify's default-on
 usage posts to `shopify.dev` were deliberately not copied.)
 
+Status 30/9/26: this repo is local-only and **not yet published** to
+`github.com/usequeek` — the install commands below assume that URL and are
+UNVERIFIED on a fresh host until the first publish + sandboxed
+`npx skills add` load. `package.json` stays `private: true` on purpose:
+PUBLIC here means git distribution, not npm — the flag only blocks an
+accidental `npm publish`. The `skills` CLI mechanism itself was verified
+(`npx skills --help` lists `add` + `update`). Scaffolded apps will carry
+only an `AGENTS.md` pointer to this repo once starter A1 lands; until then
+the pointer target exists but no app references it.
+
 ## Skills
 
 | Skill | What it covers | Sources (only real docs) |

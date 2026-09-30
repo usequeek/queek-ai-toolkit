@@ -8,9 +8,11 @@ metadata:
 
 # Queek types
 
-The Merchant API contract is additive under `v1`, and types are generated
-in the app from the live spec — never bundled with the SDK. Freshness is a
-manual re-run, the same as Shopify's `graphql-codegen` step.
+The Merchant API is additive under `v1` by POLICY (plan
+`app-live-types-and-ai-toolkit.md` G1/B2 — the served spec carries no
+additive/v2-alongside text yet; B2 is unlanded). Types are generated in the
+app from the live spec — never bundled with the SDK. Freshness is a manual
+re-run, the same as Shopify's `graphql-codegen` step.
 
 - Codegen flow (the only supported path) → `cat references/codegen.md`
 - Freshness rule (when to re-run, what pins what) → `cat references/freshness.md`

@@ -15,6 +15,8 @@ before writing a manifest:
 - Field-by-field shape with a real example → `cat references/manifest-shape.md`
 - Validation rules the CLI enforces → `cat references/manifest-rules.md`
 
-The validator (`@usequeek/cli` `src/lib/app-manifest.ts`) fails closed on
-unknown fields: if a key is not in the references, the CLI rejects it. Do
-not invent keys.
+The CLI validator (`@usequeek/cli` `src/lib/app-manifest.ts`) fails closed
+on unknown fields — `Unknown field 'x' in manifest.` — and so does the
+backend (`AppManifestValidator::rejectUnknown`). `references/manifest-rules.md`
+lists every accepted key for both. Do not invent keys; if a key you need is
+not listed there, it does not exist.

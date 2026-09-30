@@ -20,7 +20,9 @@ Rules that apply everywhere in this skill:
 1. Verify every signed delivery BEFORE acting on it (signature check first,
    then parse, then run business logic). Never proof-call the Merchant API
    before answering the delivery.
-2. Secrets are `whsec_…` strings used whole — never base64-decode them,
-   never log them.
+2. Never log a secret. Never hand-roll key derivation either: topic
+   webhooks decode the `whsec_` secret internally (`secretKeyBytes`) and
+   the proxy uses the full string — call `verifyQueekSignature` /
+   `verifyProxyQuery`, do not reimplement them (see `references/webhooks.md`).
 3. Every rule below cites the SDK source file it came from. If the SDK
    disagrees with this skill, the SDK wins.

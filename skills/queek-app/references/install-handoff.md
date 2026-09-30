@@ -26,10 +26,26 @@ else. The Standard Webhooks headers ride on the APP signing secret
   `installOptions = { appSecret: process.env.QUEEK_APP_SECRET!, store }`
   (`README.md:47-54`).
 
+## Envelope
+
+The signed body envelope is `{ id, type, api_version: "v1", created_at,
+data }` with `type` one of `app/installed` | `app/uninstalled` |
+`app/settings_updated` | `app/resync` (`src/handoff.ts:10,26-29,103-109`).
+
 ## Secrets
 
-- One asymmetric credential per app — no per-installation secrets cross the
-  handoff (`README.md:170-172`).
+- No store-callable *token* crosses the handoff any more (S1, SDK 0.2.0):
+  the app mints short-lived installation tokens with its asymmetric app key
+  (`acquireToken()`) — "no per-installation secrets" in `README.md:170-172`
+  means no token, NOT no secrets.
+- Three per-installation secrets DO arrive inside the signed `InstallData`
+  (`src/handoff.ts:43-90`): `webhook_secret` (the endpoint's `whsec_…`,
+  handed over ONCE per rotation; `:57-58`), `proxy_secret` (the
+  installation's `whsec_…` proxy secret, `backend proxy_secret`, ONCE per
+  install/resync; `:60-67`), and `embed_secret` (the `embsec_…` HS256 key
+  for dashboard session tokens on the embedded merchant page, verified with
+  `@usequeek/app-sdk/server verifySessionToken`; `:68-75`). Each is null
+  when the app does not use that channel — absence is the signal.
 - The app secret (`QUEEK_APP_SECRET`) verifies the handoff; the per-install
   `whsec_…` proxy secret is handed over ONCE per rotation
   (`src/handoff.ts:13,57-60`).

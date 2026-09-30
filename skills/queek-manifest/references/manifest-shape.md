@@ -5,6 +5,10 @@ for `queek app dev` / `queek app deploy`. Secrets never live here. Groups
 map 1:1 onto the backend manifest keys ([listing], [access], [webhooks],
 [app], [[settings]], [extensions])").
 
+TRIMMED example: the real booking toml carries a third `[[extensions.nav]]`
+(`Hours` → `/admin/hours`) and a second block-schema field (`time`);
+both are cut below for length. Shapes are identical to the ones shown.
+
 ```toml
 slug = "booking"
 name = "Service Booking"
