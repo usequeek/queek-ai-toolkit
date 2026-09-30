@@ -1,0 +1,12 @@
+{
+  "name": "queek-ai-toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Queek AI Toolkit — agent skills for building Queek apps (install handoff, webhooks, manifest, bridge, review, Merchant API types). Zero telemetry.",
+  "author": "Queek",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/toolkit.test.mjs"
+  }
+}

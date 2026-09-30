@@ -1,0 +1,26 @@
+{
+  "name": "queek-plugin",
+  "version": "0.1.0",
+  "description": "Queek developer tools for OpenAI Codex — install handoff and webhook verification, manifest rules, embedded-app bridge, Built for Queek review, Merchant API types. Ships zero telemetry: no skill script or hook posts anywhere.",
+  "author": { "name": "Queek" },
+  "homepage": "https://github.com/usequeek/queek-ai-toolkit",
+  "repository": "https://github.com/usequeek/queek-ai-toolkit",
+  "license": "MIT",
+  "keywords": ["queek", "merchant-api", "apps", "webhooks", "bridge"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Queek",
+    "shortDescription": "Verify Queek handoffs and webhooks, write manifests, build bridge UI.",
+    "longDescription": "Build Queek apps: verify the install handoff and Standard Webhooks, author queek.app.toml, drive the embedded-app bridge, pass Built for Queek review, and regenerate Merchant API types — all without leaving your workflow.",
+    "developerName": "Queek",
+    "category": "Productivity",
+    "capabilities": ["Read"],
+    "websiteURL": "https://github.com/usequeek/queek-ai-toolkit",
+    "defaultPrompt": [
+      "How do I verify the Queek install handoff in a Next.js route?",
+      "What scopes and nav items go in queek.app.toml?",
+      "Send a toast over the Queek bridge",
+      "What does the Built for Queek review check?"
+    ]
+  }
+}

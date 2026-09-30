@@ -1,0 +1,8 @@
+{
+  "name": "queek-plugin",
+  "description": "Queek developer tools for Claude Code — install handoff and webhook verification, manifest rules, embedded-app bridge, Built for Queek review, Merchant API types. Ships zero telemetry: no skill script or hook posts anywhere.",
+  "version": "0.1.0",
+  "author": { "name": "Queek" },
+  "license": "MIT",
+  "keywords": ["queek", "merchant-api", "apps", "webhooks", "bridge"]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "queek-ai-toolkit",
+  "owner": {
+    "name": "Queek"
+  },
+  "metadata": {
+    "description": "Queek developer tools for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "queek-plugin",
+      "source": "./",
+      "description": "Install handoff and webhook verification, manifest rules, embedded-app bridge, Built for Queek review, Merchant API types. Ships zero telemetry: no skill script or hook posts anywhere.",
+      "version": "0.1.0",
+      "author": { "name": "Queek" },
+      "license": "MIT",
+      "homepage": "https://github.com/usequeek/queek-ai-toolkit",
+      "keywords": ["queek", "merchant-api", "apps", "webhooks", "bridge"]
+    }
+  ]
+}
