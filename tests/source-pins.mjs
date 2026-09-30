@@ -15,9 +15,9 @@ export const DEFAULT_ROOTS = {
 };
 
 export const PINS = {
-  sdk: "9a4b5b385ebb0714e832eb4abf889f56021efb6d",
-  cli: "6d1d8bbbc464f3d05e267935e64316cd59511dc3",
-  backend: "3804c444776c61ebe66add28b8136615669cc8a9",
+  sdk: "df72a4863cc5481f04d1f6adb8d4b970a8c1124f",
+  cli: "cc97789ffeb303a949024284b7723924027c0d1b",
+  backend: "4c8a56cb64edaa7a3beb735eade3dd033328c8db",
 };
 
 // {root, file, ref?, symbols[]} — ref set reads via `git show <ref>:<file>`.

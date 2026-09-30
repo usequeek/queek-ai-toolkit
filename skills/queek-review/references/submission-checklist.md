@@ -5,8 +5,9 @@ Sources: `queek_backend` `app/Services/Apps/SubmissionCheckService.php`
 and `app/Http/Controllers/Api/Vendor/Developer/DeveloperAppController.php`
 (routes — on `origin/master`), plus the flow design
 `.agent/TASKS/active/app-review-submission-flow.md` item 4 (checklist
-semantics). Line numbers below are `origin/master` 30/9/26; prefer the
-symbol names — they survive better than lines.
+semantics). Check-service cites carry `origin/master` line numbers (30/9/26)
+beside their symbol names; the live routes below are cited by HTTP method +
+URI + handler symbol with no line numbers, so they can't drift.
 
 ## Item shape
 
@@ -35,16 +36,16 @@ vs server `now()` UTC (`:98`, `:152-166`).
 ## Live routes (verified on `origin/master`, not the design doc)
 
 - Checklist: `GET apps/{app}/versions/{sequence}/submission`
-  (`routes/vendor-api.php:1138`, `DeveloperAppController::submission`
-  at `:141`).
+  (`routes/vendor-api.php`, `DeveloperAppController::submission`,
+  throttled `developer-read`).
 - Submit latest development version: `POST apps/{app}/submit`
-  (`routes/vendor-api.php:1129`, `DeveloperAppController::submit` at
-  `:101`, throttled `developer-submit`).
+  (`routes/vendor-api.php`, `DeveloperAppController::submit`,
+  throttled `developer-submit`).
 - Submit an explicit version: `POST apps/{app}/versions/{sequence}/submit`
-  (`routes/vendor-api.php:1140`, `DeveloperAppController::submitVersion`
-  at `:315`).
+  (`routes/vendor-api.php`, `DeveloperAppController::submitVersion`,
+  throttled `developer-submit`, `idempotent`).
 - Withdraw: `POST apps/{app}/versions/{sequence}/withdraw`
-  (`routes/vendor-api.php:1142`, `DeveloperAppController::withdraw` at
-  `:332`).
+  (`routes/vendor-api.php`, `DeveloperAppController::withdraw`,
+  throttled `developer-submit`).
 - Deploy never submits: releasing a version only creates it
   (`development`); submission is the explicit, separate step.

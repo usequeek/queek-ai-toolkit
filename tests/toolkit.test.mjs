@@ -129,11 +129,12 @@ test("MUST-2: handoff names the three secrets, denies only tokens", () => {
   assert.doesNotMatch(body, /no per-installation secrets cross/i, "false claim gone");
 });
 
-test("MUST-3: submit routes cite origin/master with version-scoped endpoints", () => {
+test("MUST-3: submit routes cite origin/master by symbol with version-scoped endpoints", () => {
   const body = read("skills/queek-review/references/submission-checklist.md");
-  for (const s of ["1129", "1140", "1142", "1138", "submitVersion", "withdraw", "::submission", "SubmissionCheckService", "FRESHNESS"]) {
-    assert.match(body, new RegExp(s.replace(/:/g, ":")), `cites ${s}`);
+  for (const s of ["apps/{app}/submit", "versions/{sequence}/submission", "versions/{sequence}/submit", "versions/{sequence}/withdraw", "submitVersion", "withdraw", "::submission", "::submit", "SubmissionCheckService", "FRESHNESS"]) {
+    assert.ok(body.includes(s), `cites ${s}`);
   }
+  assert.doesNotMatch(body, /vendor-api\.php:\d/, "no driftable route line numbers");
   assert.doesNotMatch(body, /vendor-api\.php:1049/, "stale working-tree line gone");
 });
 
