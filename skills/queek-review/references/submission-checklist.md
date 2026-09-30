@@ -5,32 +5,33 @@ Sources: `queek_backend` `app/Services/Apps/SubmissionCheckService.php`
 and `app/Http/Controllers/Api/Vendor/Developer/DeveloperAppController.php`
 (routes — on `origin/master`), plus the flow design
 `.agent/TASKS/active/app-review-submission-flow.md` item 4 (checklist
-semantics). Check-service cites carry `origin/master` line numbers (30/9/26)
-beside their symbol names; the live routes below are cited by HTTP method +
-URI + handler symbol with no line numbers, so they can't drift.
+semantics). Check-service and route cites name symbols on `origin/master`
+(verified 30/9/26) with no line numbers, so they can't drift.
 
 ## Item shape
 
-Every checklist item is `{ key, level, ok, detail, at }` where `level` is
-`error | warning` (`SubmissionCheckService.php:113,121`). Submit is refused
+Every checklist item is `{ key, level, ok, detail, at }` (the `run`
+return shape) where `level` is `error | warning` (`LEVEL_ERROR` /
+`LEVEL_WARNING` in `SubmissionCheckService.php`). Submit is refused
 while any error-level check fails or any acknowledged warning is unacked
-(`:160-177`), and every `checks[].at` must be ≤ `FRESHNESS_HOURS = 24` old
-vs server `now()` UTC (`:98`, `:152-166`).
+(`SubmissionCheckService::evaluate`), and every `checks[].at` must be ≤
+`FRESHNESS_HOURS = 24` old vs server `now()` UTC (`FRESHNESS_HOURS`,
+`storedFresh` / `isFresh`).
 
-## Items (keys are `CHECK_*` consts, `:36-46`; labels in `CHECK_LABELS`, `:77-83`)
+## Items (keys are `CHECK_*` consts; labels in `CHECK_LABELS` — both in `SubmissionCheckService.php`)
 
 - Listing complete (error): name, description (≥ 80 chars — a Queek choice,
-  `:330,462`), logo/icon, privacy_url, support_url, category.
+  `listingCheck` / `listingMessage`), logo/icon, privacy_url, support_url, category.
 - Tested (error): THIS version reached `active` on at least one install.
   Ever-active counts — a later uninstall does NOT un-earn it; failed installs
-  neither satisfy nor penalise (`:488-489`).
+  neither satisfy nor penalise (`testedCheck`).
 - Endpoints (error): install / uninstall / webhook URLs are HTTPS and
   publicly reachable; a webhook sent with a FORGED signature is rejected
   (4xx) by the app; the app answers a correctly signed ping with 2xx.
 - Embedded page (warning): `merchant_page_url` sends a restrictive
-  `frame-ancestors` (`:410`).
+  `frame-ancestors` (`embeddedMessage`).
 - Demo store link (warning) + demo host (error): `demo_presence` /
-  `demo_host` checks exist (`WARNING_KEYS`, `:53`); the manifest keys they
+  `demo_host` checks exist (`WARNING_KEYS`); the manifest keys they
   read are `demo_url` / `video_url` (see the `queek-manifest` skill).
 
 ## Live routes (verified on `origin/master`, not the design doc)

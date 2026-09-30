@@ -202,13 +202,21 @@ test("MUST-8: README states the fresh-host install status honestly", () => {
   assert.match(body, /npx skills update/, "manual update documented");
 });
 
-test("codegen-as-CLI-command is marked coming, never available", () => {
+test("codegen is unreleased branch code, never runnable today", () => {
   const codegen = read("skills/queek-types/references/codegen.md");
-  assert.match(codegen, /COMING IN THE NEXT CLI RELEASE/, "unreleased status stated");
-  assert.match(codegen, /theme-tools-wt-codegen/, "unreleased home cited");
+  assert.match(codegen, /UNRELEASED/, "unreleased status stated");
+  assert.match(codegen, /feat\/queek-app/, "branch cited");
+  assert.match(codegen, /cc97789/, "branch commit cited");
+  assert.match(codegen, /PR #9/, "PR cited");
+  assert.match(codegen, /0\.13\.0/, "published version that lacks it cited");
+  assert.match(codegen, /packages\/cli\/src\/commands\/app\/codegen\.ts/, "implementation file cited");
+  assert.match(codegen, /AppCodegen/, "command class cited");
   assert.match(codegen, /never tell an agent to run `queek app codegen` today/, "no premature instruction");
+  assert.doesNotMatch(codegen, /theme-tools-wt-codegen/, "stale worktree home gone");
+  assert.doesNotMatch(codegen, /NOT in the shipped CLI/, "false shipped-CLI claim gone");
   const fresh = read("skills/queek-types/references/freshness.md");
-  assert.match(fresh, /coming in the next CLI release/, "freshness echoes unreleased status");
+  assert.match(fresh, /feat\/queek-app/, "freshness cites the branch");
+  assert.match(fresh, /0\.13\.0/, "freshness cites the published version");
 });
 
 test("docs URLs mentioned in skills resolve to real contract hosts", () => {

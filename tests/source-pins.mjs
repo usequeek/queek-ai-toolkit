@@ -9,7 +9,6 @@
 export const DEFAULT_ROOTS = {
   sdk: "/Users/benny/Documents/products/split/app-sdk-wt-bridge",
   cli: "/Users/benny/Documents/products/packages/theme-tools-wt-app/packages/cli",
-  codegen: "/Users/benny/Documents/products/packages/theme-tools-wt-codegen/packages/cli",
   backend: "/Users/benny/Documents/laravel/queek_backend",
   booking: "/Users/benny/Documents/products/queek-app-booking",
 };
@@ -38,11 +37,11 @@ export const CHECKS = [
   { root: "sdk", file: "src/resync.ts", symbols: ["resyncFromQueek"] },
   { root: "sdk", file: "src/webhooks.ts", symbols: ["unhandled"] },
   { root: "cli", file: "src/commands/app/deploy.ts", symbols: ["signing_secret", ".env.local", "QUEEK_APP_SECRET"] },
-  { root: "codegen", file: "src/commands/app/codegen.ts", symbols: ["AppCodegen", "types/merchant.ts", "codegen.json"] },
+  { root: "cli", file: "src/commands/app/codegen.ts", symbols: ["AppCodegen", "types/merchant.ts", "codegen.json"] },
   { root: "sdk", file: "scripts/gen-merchant-types.mjs", symbols: ["/orders/import", "openapi-typescript", "scramble:export --api=merchant"] },
   { root: "cli", file: "src/lib/app-manifest.ts", symbols: ["TOP_LEVEL_TOML_KEYS", "MANIFEST_KEYS", "checkNav", "checkExtensions", "Unknown field"] },
   { root: "booking", file: "queek.app.toml", symbols: ["[[extensions.nav]]", "merchant_page_url", "[[extensions.blocks]]"] },
-  { root: "backend", file: "app/Services/Apps/SubmissionCheckService.php", ref: "origin/master", symbols: ["CHECK_LISTING", "CHECK_TESTED", "CHECK_ENDPOINTS", "CHECK_EMBEDDED_FRAME", "CHECK_DEMO_PRESENCE", "LEVEL_ERROR", "LEVEL_WARNING", "FRESHNESS_HOURS", "WARNING_KEYS"] },
+  { root: "backend", file: "app/Services/Apps/SubmissionCheckService.php", ref: "origin/master", symbols: ["CHECK_LISTING", "CHECK_TESTED", "CHECK_ENDPOINTS", "CHECK_EMBEDDED_FRAME", "CHECK_DEMO_PRESENCE", "LEVEL_ERROR", "LEVEL_WARNING", "FRESHNESS_HOURS", "WARNING_KEYS", "CHECK_LABELS", "function evaluate", "storedFresh", "isFresh", "listingCheck", "listingMessage", "testedCheck", "embeddedMessage"] },
   { root: "backend", file: "routes/vendor-api.php", ref: "origin/master", symbols: ["apps/{app}/versions/{sequence}/submission", "apps/{app}/versions/{sequence}/withdraw", "apps/{app}/submit"] },
   { root: "backend", file: "app/Http/Controllers/Api/Vendor/Developer/DeveloperAppController.php", ref: "origin/master", symbols: ["public function submission", "public function submitVersion", "public function withdraw", "public function submit"] },
   { root: "backend", file: "app/Services/Apps/AppManifestValidator.php", ref: "origin/master", symbols: ["topLevelKeys", "demo_url", "video_url", "rejectUnknown"] },

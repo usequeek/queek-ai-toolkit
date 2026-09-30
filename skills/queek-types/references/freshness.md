@@ -1,7 +1,7 @@
 # Freshness rule
 
-Sources: `queek_backend/config/scramble.php:36`,
-`queek_backend/app/Support/Api/ApiContract.php:23`,
+Sources: `queek_backend/config/scramble.php` (`API_VERSION`),
+`queek_backend/app/Support/Api/ApiContract.php` (`VERSION_HEADER`),
 `queek_backend/app/Providers/ScrambleServiceProvider.php` (hash header,
 on `origin/master`), `@usequeek/app-sdk`
 `scripts/gen-merchant-types.mjs` + `README.md:308`, the live spec
@@ -11,8 +11,8 @@ on `origin/master`), `@usequeek/app-sdk`
 ## Pins (all verified in code or the live spec)
 
 - Spec version name: `info.version` = `API_VERSION` env, default `v1`
-  (`config/scramble.php:36`; live spec serves `info.version: v1`).
-- Runtime version header: `X-Queek-Api-Version` (`ApiContract.php:23`,
+  (`config/scramble.php` `info.version`; live spec serves `info.version: v1`).
+- Runtime version header: `X-Queek-Api-Version` (`ApiContract.php`
   `VERSION_HEADER`).
 - Spec content hash (B1, landed 30/9/26): `x-queek-spec-sha` rides BOTH the
   response header and `info.x-queek-spec-sha`, stamped from the exact served
@@ -33,7 +33,8 @@ on `origin/master`), `@usequeek/app-sdk`
    live contract").
 2. After every backend deploy that touches the Merchant API, re-run
    codegen (`npm run gen:merchant [url-or-path]`, or `queek app codegen`
-   once it ships — coming in the next CLI release) and commit the diff.
+   once the `feat/queek-app` branch ships — PR #9, in the next
+   `@usequeek/cli` release after 0.13.0) and commit the diff.
 3. A pinned old snapshot keeps compiling and working; new fields stay
    untyped until you re-run.
 4. What does NOT exist (verified 30/9/26 — do not claim it): no CLI
