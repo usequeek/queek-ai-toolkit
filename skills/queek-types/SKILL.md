@@ -9,12 +9,12 @@ metadata:
 # Queek types
 
 The Merchant API is additive under `v1` by POLICY (plan
-`app-live-types-and-ai-toolkit.md` G1) — and since B2 landed 30/9/26 the
-served spec's own `info.description` states it verbatim ("Additive-only
-under v1 … A breaking change ships as v2 alongside v1"). Types are
-generated in the app from the live spec — never bundled with the SDK.
-Freshness is a manual re-run, the same as Shopify's `graphql-codegen`
-step.
+`app-live-types-and-ai-toolkit.md` G1) — and the served spec's own
+`info.description` states it verbatim ("Additive-only under v1 … A
+breaking change ships as v2 alongside v1"). Types are generated in the
+app from the live spec with `queek app codegen` (CLI 0.14.0) — never
+bundled with the SDK. Freshness is a manual re-run, the same as
+Shopify's `graphql-codegen` step.
 
 - Codegen flow (the only supported path) → `cat references/codegen.md`
 - Freshness rule (when to re-run, what pins what) → `cat references/freshness.md`

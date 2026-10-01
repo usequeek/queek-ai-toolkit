@@ -19,7 +19,7 @@ const EXPECTED_SKILLS = [
 ];
 
 const EXPECTED_REFS = {
-  "queek-app": ["install-handoff.md", "webhooks.md", "merchant-client.md"],
+  "queek-app": ["install-handoff.md", "webhooks.md", "merchant-client.md", "scopes.md"],
   "queek-manifest": ["manifest-shape.md", "manifest-rules.md"],
   "queek-bridge": ["messages.md", "bridge-spec.md", "theme-mode.md"],
   "queek-review": ["built-for-queek.md", "submission-checklist.md"],
@@ -53,7 +53,7 @@ test("every reference file cites the source file it came from", () => {
       const body = read(`skills/${skill}/references/${ref}`);
       assert.match(
         body,
-        /(app-sdk-wt-bridge|theme-tools-wt-app|queek-app-booking|queek_backend)/,
+        /(app-sdk-wt-|theme-tools-wt-|queek-app-booking|queek_backend)/,
         `${skill}/${ref} names its source repo`,
       );
       assert.match(
@@ -147,26 +147,31 @@ test("MUST-4: bridge marks dashboard behavior PLANNED, uses exact field names", 
   assert.doesNotMatch(body, /\{\s*type:\s*'product'\s*\}/, "wrong shape gone");
 });
 
-test("MUST-5: manifest lists all keys, documents the demo_url gap, labels trimming", () => {
+test("MUST-5: manifest lists all keys, mirrors the 28-key shape, labels trimming", () => {
   const rules = read("skills/queek-manifest/references/manifest-rules.md");
-  for (const key of ["handle", "version", "distribution", "icon", "developer", "category", "dashboard", "dev", "demo_url", "video_url"]) {
+  for (const key of ["handle", "version", "distribution", "icon", "developer", "category", "dashboard", "dev", "demo_url", "video_url", "optional_scopes"]) {
     assert.match(rules, new RegExp(`\`${key}\``), `rules list ${key}`);
   }
-  assert.match(rules, /GAP/, "CLI/backend gap documented");
-  assert.match(rules, /27 top-level keys/, "backend count stated");
+  assert.match(rules, /28/, "flattened mirror count stated");
+  assert.match(rules, /disjoint/, "required/optional disjointness stated");
+  assert.match(rules, /checkDashboard/, "dashboard blocks covered");
+  assert.doesNotMatch(rules, /27 top-level keys/, "stale 27-count gone");
+  assert.doesNotMatch(rules, /GAP/, "gap history gone");
   assert.match(read("skills/queek-manifest/references/manifest-shape.md"), /TRIMMED/, "trimming labeled");
+  assert.match(read("skills/queek-manifest/references/manifest-shape.md"), /optional_scopes/, "shape shows the access table");
 });
 
-test("MUST-6: additive is plan policy plus landed spec text, B1/B2 marked landed", () => {
+test("MUST-6: additive is plan policy plus served spec text, B1/B2 pinned", () => {
   const fresh = read("skills/queek-types/references/freshness.md");
   assert.match(fresh, /POLICY/, "additive labeled policy");
-  assert.match(fresh, /B2 landed/, "B2 status stated");
-  assert.match(fresh, /B1, landed|B1 landed/, "B1 status stated");
+  assert.match(fresh, /\(B2\)/, "B2 pin stated");
+  assert.match(fresh, /\(B1\)/, "B1 pin stated");
   assert.match(fresh, /x-queek-spec-sha/, "hash pin named");
   assert.match(fresh, /ScrambleServiceProvider/, "hash header source cited");
   assert.doesNotMatch(fresh, /unlanded/, "no stale unlanded claims remain");
+  assert.doesNotMatch(fresh, /landed/, "no release-history prose");
   assert.match(read("skills/queek-types/SKILL.md"), /POLICY/, "skill echoes policy framing");
-  assert.match(read("skills/queek-types/SKILL.md"), /B2 landed/, "skill states B2 landed");
+  assert.match(read("skills/queek-types/SKILL.md"), /queek app codegen/, "skill names the released path");
 });
 
 test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
@@ -195,28 +200,57 @@ test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
   if (checked === 0) t.skip("no source checkouts present — symbol guard inactive");
 });
 
-test("MUST-8: README states the fresh-host install status honestly", () => {
+test("MUST-8: README states the public-repo install status honestly", () => {
   const body = read("README.md");
-  assert.match(body, /not yet published|pending|unverified/i, "publish/install status disclosed");
+  assert.match(body, /github\.com\/usequeek\/queek-ai-toolkit/, "public repo named");
   assert.match(body, /npx skills add usequeek\/queek-ai-toolkit/, "skills-add route documented");
   assert.match(body, /npx skills update/, "manual update documented");
+  assert.doesNotMatch(body, /not yet published/i, "stale unpublished claim gone");
 });
 
-test("codegen is unreleased branch code, never runnable today", () => {
+test("codegen is released in CLI 0.14.0 and runnable", () => {
   const codegen = read("skills/queek-types/references/codegen.md");
-  assert.match(codegen, /UNRELEASED/, "unreleased status stated");
-  assert.match(codegen, /feat\/queek-app/, "branch cited");
-  assert.match(codegen, /39b0bb6/, "branch tip cited");
-  assert.match(codegen, /PR #9/, "PR cited");
-  assert.match(codegen, /0\.13\.0/, "published version that lacks it cited");
+  assert.match(codegen, /RELEASED/, "released status stated");
+  assert.match(codegen, /0\.14\.0/, "released version cited");
+  assert.match(codegen, /queek app codegen/, "runnable command named");
   assert.match(codegen, /packages\/cli\/src\/commands\/app\/codegen\.ts/, "implementation file cited");
   assert.match(codegen, /AppCodegen/, "command class cited");
-  assert.match(codegen, /never tell an agent to run `queek app codegen` today/, "no premature instruction");
-  assert.doesNotMatch(codegen, /theme-tools-wt-codegen/, "stale worktree home gone");
-  assert.doesNotMatch(codegen, /NOT in the shipped CLI/, "false shipped-CLI claim gone");
+  assert.match(codegen, /types\/merchant\.ts/, "output file cited");
+  assert.match(codegen, /codegen\.json/, "record file cited");
+  assert.doesNotMatch(codegen, /UNRELEASED/, "stale unreleased claim gone");
+  assert.doesNotMatch(codegen, /feat\/queek-app/, "branch home gone");
+  assert.doesNotMatch(codegen, /39b0bb6/, "branch tip gone");
+  assert.doesNotMatch(codegen, /PR #9/, "PR cite gone");
+  assert.doesNotMatch(codegen, /0\.13\.0/, "old version gone");
+  assert.doesNotMatch(codegen, /never tell an agent to run/, "no-run instruction gone");
   const fresh = read("skills/queek-types/references/freshness.md");
-  assert.match(fresh, /feat\/queek-app/, "freshness cites the branch");
-  assert.match(fresh, /0\.13\.0/, "freshness cites the published version");
+  assert.match(fresh, /queek app codegen/, "freshness names the released path");
+  assert.match(fresh, /0\.14\.0/, "freshness cites the released version");
+  assert.doesNotMatch(fresh, /feat\/queek-app/, "freshness branch cite gone");
+  assert.doesNotMatch(fresh, /0\.13\.0/, "freshness old version gone");
+});
+
+test("auth is one session token with one verifier, no launch/purpose split", () => {
+  const handoff = read("skills/queek-app/references/install-handoff.md");
+  for (const s of ["queek_token", "verifySessionTokenDetailed", "installAuthFetch", "sessionTokenInstallationId", "@usequeek/app-sdk/browser", "@usequeek/app-sdk/server"]) {
+    assert.ok(handoff.includes(s), `handoff names ${s}`);
+  }
+  assert.doesNotMatch(handoff, /verifyLaunchToken/, "launch verifier gone");
+  assert.doesNotMatch(handoff, /purpose/, "purpose split gone");
+  const skill = read("skills/queek-app/SKILL.md");
+  assert.match(skill, /@usequeek\/app-sdk\/browser/, "entry table lists /browser");
+  assert.match(skill, /verifySessionTokenDetailed/, "entry table lists the single verifier");
+  assert.doesNotMatch(skill, /verifyLaunchToken/, "entry table drops the launch verifier");
+  assert.match(read("skills/queek-bridge/references/theme-mode.md"), /THEME_PARAM/, "theme cites the unsigned param");
+  assert.doesNotMatch(read("skills/queek-bridge/references/theme-mode.md"), /resolvedTheme/, "dashboard-render claim gone");
+});
+
+test("optional scopes name the manifest key, the session, the handoff, and the consent link", () => {
+  const scopes = read("skills/queek-app/references/scopes.md");
+  for (const s of ["optional_scopes", "queryScopes", "requestScopes", "revokeScopes", "createInstallationScopesClient", "app/scopes_update", "/apps?app=<slug>&view=scopes&scopes=<csv>", "app-initiated only"]) {
+    assert.ok(scopes.includes(s), `scopes names ${s}`);
+  }
+  assert.match(read("skills/queek-manifest/references/manifest-rules.md"), /optional_scopes/, "rules cover the manifest key");
 });
 
 test("no driftable file:line source cites anywhere under skills/", () => {

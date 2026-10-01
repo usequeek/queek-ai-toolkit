@@ -1,13 +1,20 @@
 # Theme mode follows the dashboard
 
-Source: `queek_backend/.agent/TASKS/active/app-ui-kit.md`, item U7
-("Theme mode follows the dashboard").
+Sources: `@usequeek/app-sdk` `src/theme.ts` (`THEME_PARAM`,
+`themeBootstrapScript`, `applyTheme`, `installThemeListener`,
+`rememberThemeMode`, `getThemeModeFromUrl`, `THEME_STORAGE_KEY`),
+`src/browser.ts` (the `/browser` entry). (Repo: `app-sdk-wt-scopes`.)
 
 - Dark when the dashboard is dark, light when light, switching live.
-- First load: the dashboard adds `theme=light|dark` to the frame URL
-  (dashboard `resolvedTheme`) so the app server-renders
-  `<html class="dark">` with no flash.
-- Live change: bridge `theme{mode}` → the SDK toggles the `dark` class
-  (shadcn's own dark-mode mechanism).
-- UI rule (from the same doc's U3/U5 direction): app UI is shadcn with the
-  Queek theme — never restyle design tokens by hand.
+- First load: `theme` is a plain unsigned URL param (`theme=light|dark`,
+  `THEME_PARAM`) — a first-paint hint only, never auth. Render it with
+  the inline `<head>` snippet from `themeBootstrapScript()` so the first
+  paint does not flash; the live bridge message overwrites it.
+- Live change: bridge `theme{mode}` → `applyTheme(mode)` toggles the
+  `dark` class (shadcn's own dark-mode mechanism); `installThemeListener`
+  follows the messages. The mode is remembered in `sessionStorage`
+  (`THEME_STORAGE_KEY`, via `rememberThemeMode` / `getThemeModeFromUrl`),
+  so an in-frame reload without the param still paints correctly.
+- UI rule (plan `app-ui-kit.md`, U3/U5 direction in `queek_backend`):
+  app UI is shadcn with the Queek theme — never restyle design tokens by
+  hand.

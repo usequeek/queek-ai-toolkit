@@ -1,10 +1,10 @@
 # Install handoff
 
-Sources (repo `app-sdk-wt-bridge`, SDK 0.5.1 at `b9b4332`): `src/install-handlers.ts`,
+Sources (repo `app-sdk-wt-scopes`, SDK 0.6.1): `src/install-handlers.ts`,
 `src/handoff.ts`, `src/hono.ts`, `src/session.ts`, `src/server.ts`,
 `src/app-auth.ts`, `src/tokens.ts`, `src/resync.ts`, `README.md` (sections
 named in each bullet); CLI `src/commands/app/deploy.ts`
-(repo `theme-tools-wt-app`). Symbols are the contract; line numbers drift.
+(repo `theme-tools-wt-rel`, CLI 0.14.0). Symbols are the contract; line numbers drift.
 
 ## Order per request: verify first, then parse, then act
 
@@ -48,8 +48,10 @@ after the installation is durably stored.
 
 The signed body envelope is `{ id, type, api_version: "v1", created_at,
 data }` with `type` one of `app/installed` | `app/uninstalled` |
-`app/settings_updated` | `app/resync` (`src/handoff.ts`: `INSTALL_EVENT`,
-`UNINSTALL_EVENT`, `SETTINGS_EVENT`, `RESYNC_EVENT`, `HandoffEnvelope`).
+`app/settings_updated` | `app/resync` | `app/scopes_update`
+(`src/handoff.ts`: `INSTALL_EVENT`, `UNINSTALL_EVENT`, `SETTINGS_EVENT`,
+`RESYNC_EVENT`, `SCOPES_UPDATE_EVENT`, `HandoffEnvelope`). The scopes
+handoff is covered in `references/scopes.md`.
 `app/resync` carries the install-shaped `InstallData` (plus `secret_rotated`)
 and is accepted by BOTH the `install` and `settings` handlers. On `settings`
 it always takes the resync merge; on `install` it takes the resync merge
@@ -123,22 +125,35 @@ default in `uninstallDelivery`, `src/install-handlers.ts`).
   tokens, store })` (`src/resync.ts`). It restores connectivity only; app
   working data needs your own backups (`README.md` § Data rule + backups).
 
-## Embedded page session tokens (server only)
+## Embedded page session tokens (one token, server verifies)
 
-The framed merchant page receives a dashboard session token; verify it
-server-side before trusting a call that carries one (`README.md` § Embedded
-merchant page).
+One session token serves the framed merchant page in both transports: the
+dashboard puts it in the first-load URL param (`queek_token`,
+`LAUNCH_TOKEN_PARAM`, stripped on arrival) and answers bridge `ready`
+requests with it on refresh (`src/auth-fetch.ts`, `src/session.ts` header
+comment). Verify it server-side before trusting a call that carries one
+(`README.md` § Embedded merchant page).
 
-- Import from `@usequeek/app-sdk/server` only — the secret must never enter
-  a browser bundle (`src/server.ts`).
-- `verifySessionToken(token, { secret, audience, issuer, expected })`: HS256
-  over the installation's `embsec_…` secret (raw UTF-8 bytes), `audience` =
-  the app slug, `issuer` = the handoff `api_base` verbatim, `expected` =
+- Browser side: `installAuthFetch` from `@usequeek/app-sdk/browser`
+  (pass your `exchange` callback) — reads `queek_token` from the first load,
+  strips it, exchanges it once for the app's own session, attaches
+  `Authorization: Bearer <session>` to same-origin fetches, and
+  re-establishes via the bridge `ready→token` flow + one retry on 401
+  (`src/auth-fetch.ts`: `installAuthFetch`, `readLaunchToken`,
+  `stripLaunchToken`, `BRIDGE_TOKEN_TIMEOUT_MS`). Import it from the
+  `/browser` entry, never from the main entry.
+- Server side: `verifySessionTokenDetailed(token, { secret, audience,
+  issuer, expected })` from `@usequeek/app-sdk/server` — the single
+  verifier for first-load and refresh tokens alike. HS256 over the
+  installation's `embsec_…` secret (raw UTF-8 bytes), `audience` = the app
+  slug, `issuer` = the handoff `api_base` verbatim, `expected` =
   `{ installationId, vendorId, appSlug, appId }` from your own row; 20 s
-  clock tolerance (`SESSION_CLOCK_TOLERANCE_SECONDS`) (`src/session.ts`).
-- `verifyLaunchToken` verifies the signed-first-load token (`purpose` must be
-  `launch`); a launch token is refused as a bridge token and vice versa
-  (`src/session.ts` header comment). `sessionTokenInstallationId(token)`
-  reads the installation id as an unverified routing hint only.
+  clock tolerance (`SESSION_CLOCK_TOLERANCE_SECONDS`) (`src/session.ts`,
+  `src/server.ts`). The secret must never enter a browser bundle.
+- `sessionTokenInstallationId(token)` reads the installation id as an
+  unverified routing hint only — load the row, then verify.
+- `theme` is a plain unsigned URL param (`theme=light|dark`, `THEME_PARAM`,
+  first-paint hint only — hints are not auth; the live bridge `theme`
+  message overwrites it). See the `queek-bridge` skill's `theme-mode.md`.
 - Serve the page with `Content-Security-Policy: frame-ancestors <dashboard
   origin>` (`README.md` § Embedded merchant page).

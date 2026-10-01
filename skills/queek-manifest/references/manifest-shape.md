@@ -28,6 +28,9 @@ scopes = [
   "merchant-items-detail",
   "merchant-app-requirements-write",
 ]
+# Declared-optional scopes (same table; granted on request, never at
+# install — disjoint from `scopes`, see `manifest-rules.md`):
+optional_scopes = ["merchant-items-delete"]
 
 [webhooks]
 topics = ["orders/paid"]

@@ -14,15 +14,21 @@ Read the reference file that fits the task before writing code:
 - Install / uninstall / settings handoff, app credentials, embedded-page tokens → `cat references/install-handoff.md`
 - Topic webhooks and app-proxy verification → `cat references/webhooks.md`
 - Calling the Merchant API → `cat references/merchant-client.md`
+- Optional scopes (query / request / revoke, `app/scopes_update`) → `cat references/scopes.md`
 
-SDK entry points (`@usequeek/app-sdk`, `package.json` `exports`):
+SDK entry points (`@usequeek/app-sdk` 0.6.1, `package.json` `exports`):
 
-| Import | Carries |
-|---|---|
-| `@usequeek/app-sdk` | handlers, verifiers, clients, store, bridge helpers (`src/index.ts`) |
-| `@usequeek/app-sdk/server` | `verifySessionToken`, `verifyLaunchToken` — server only (`src/server.ts`) |
-| `@usequeek/app-sdk/hono` | `createInstallHandlers`, `createWebhookHandler`, `createProxyHandler` (`src/hono.ts`) |
-| `@usequeek/app-sdk/react` | `QueekProvider`, `useQueek` (`src/react.ts`) |
+| Import | For | Carries |
+|---|---|---|
+| `@usequeek/app-sdk` | Server / universal code | handlers, clients, stores (`src/index.ts`) — NOT browser-bundlable |
+| `@usequeek/app-sdk/server` | Session-token verification | `verifySessionToken`, `verifySessionTokenDetailed` — server only (`src/server.ts`) |
+| `@usequeek/app-sdk/hono` | Hono apps | `createInstallHandlers`, `createWebhookHandler`, `createProxyHandler` (`src/hono.ts`) |
+| `@usequeek/app-sdk/react` | React apps | `QueekProvider`, `useQueek` (`src/react.ts`) |
+| `@usequeek/app-sdk/browser` | Plain-browser code | `installAuthFetch`, frame + theme helpers (`src/browser.ts`) — browser only |
+
+Browser rule: code that ships to the browser imports from
+`@usequeek/app-sdk/browser`, never from the main entry — the main barrel
+pulls `node:crypto` / `pg` and breaks browser builds.
 
 Rules that apply everywhere in this skill:
 

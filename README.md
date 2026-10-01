@@ -10,25 +10,23 @@ Public, MIT. **Zero telemetry**: no skill posts anywhere, no hooks, no
 opt-out flag to set — there is nothing to opt out of. (Shopify's default-on
 usage posts to `shopify.dev` were deliberately not copied.)
 
-Status 30/9/26: this repo is local-only and **not yet published** to
-`github.com/usequeek` — the install commands below assume that URL and are
-UNVERIFIED on a fresh host until the first publish + sandboxed
-`npx skills add` load. `package.json` stays `private: true` on purpose:
-PUBLIC here means git distribution, not npm — the flag only blocks an
+Public at `github.com/usequeek/queek-ai-toolkit` — the install commands
+below assume that URL. `package.json` stays `private: true` on purpose:
+public here means git distribution, not npm — the flag only blocks an
 accidental `npm publish`. The `skills` CLI mechanism itself was verified
-(`npx skills --help` lists `add` + `update`). Scaffolded apps will carry
-only an `AGENTS.md` pointer to this repo once starter A1 lands; until then
-the pointer target exists but no app references it.
+(`npx skills --help` lists `add` + `update`). Scaffolded apps carry only
+an `AGENTS.md` pointer to this repo; skills are never vendored into SDKs
+or apps.
 
 ## Skills
 
 | Skill | What it covers | Sources (only real docs) |
 |---|---|---|
-| `queek-app` | Install/uninstall/settings handoff (verify first), Standard Webhooks + app-proxy verification (`whsec_`), Merchant API client (`X-Client-Key`, `Idempotency-Key`) | SDK `README.md`, `src/install-handlers.ts`, `src/handoff.ts`, `src/proxy.ts`, `src/client.ts`, `src/signatures.ts` |
-| `queek-manifest` | `queek.app.toml` shape, scopes, `[[extensions.nav]]`, blocks, proxy | `queek-app-booking/queek.app.toml`, CLI `src/lib/app-manifest.ts` |
-| `queek-bridge` | Typed bridge messages, handshake + capabilities, picker, theme mode | SDK `src/frame.ts`, `app-ui-kit.md` (bridge v1, U7) |
+| `queek-app` | Install/uninstall/settings handoff (verify first), Standard Webhooks + app-proxy verification (`whsec_`), Merchant API client (`X-Client-Key`, `Idempotency-Key`), optional scopes, single-token embedded auth | SDK `README.md`, `src/install-handlers.ts`, `src/handoff.ts`, `src/proxy.ts`, `src/client.ts`, `src/signatures.ts`, `src/scopes.ts`, `src/session.ts` |
+| `queek-manifest` | `queek.app.toml` shape, required + optional scopes, `[[extensions.nav]]`, blocks, dashboard blocks, proxy | `queek-app-booking/queek.app.toml`, CLI `src/lib/app-manifest.ts` |
+| `queek-bridge` | Typed bridge messages, handshake + capabilities, picker, theme mode | SDK `src/frame.ts`, `src/theme.ts`, `app-ui-kit.md` (bridge v1, U7) |
 | `queek-review` | "Built for Queek" rule + submission checklist `{key, level, ok, detail}` | `app-ui-kit.md` (U5), `app-review-submission-flow.md` (item 4) |
-| `queek-types` | `gen:merchant` codegen flow, manual freshness rule | SDK `scripts/gen-merchant-types.mjs`, backend `config/scramble.php`, `ApiContract.php` |
+| `queek-types` | `queek app codegen` flow (CLI 0.14.0), manual freshness rule | CLI `src/commands/app/codegen.ts`, backend `config/scramble.php`, `ApiContract.php` |
 
 Every command, endpoint, and field named in a skill exists in the cited
 source file. If the code disagrees with a skill, the code wins.

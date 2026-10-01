@@ -1,10 +1,10 @@
 # Manifest validation rules
 
-Sources: `@usequeek/cli` `src/lib/app-manifest.ts` (repo:
-`theme-tools-wt-app/packages/cli`, CLI `feat/queek-app` branch at `39b0bb6`)
-and `queek_backend` `app/Services/Apps/AppManifestValidator.php`
-(`topLevelKeys()`, `rejectUnknown` — on `origin/master`). Both validators
-fail closed: unknown fields are rejected, required fields throw.
+Sources: `@usequeek/cli` 0.14.0 `src/lib/app-manifest.ts` (repo:
+`theme-tools-wt-rel/packages/cli`) and `queek_backend`
+`app/Services/Apps/AppManifestValidator.php` (`topLevelKeys()`,
+`rejectUnknown`). Both validators fail closed: unknown fields are
+rejected, required fields throw.
 
 ## Top-level TOML keys (all 16 — `TOP_LEVEL_TOML_KEYS`)
 
@@ -15,31 +15,35 @@ fail closed: unknown fields are rejected, required fields throw.
 
 ## Required
 
-- `slug` (matches `SLUG_RE`), `name`, `scopes` (non-empty list — "The
-  scopes field is required (at least one)"), `install_url`,
-  `uninstall_url` (`AppManifest` type).
+- `slug` (matches `SLUG_RE`), `name`, `scopes` (the field stays present
+  but may be empty), `install_url`, `uninstall_url` (`AppManifest` type).
 - Manifest key inventory must never contain anything that smells like a
   secret (`secretProblem`): secrets never live in the toml.
 
-## Server-side keys and the `demo_url` / `video_url` gap (CLOSED)
+## Access (`[access]` → `scopes`, `optional_scopes`)
 
-- The backend accepts 27 top-level keys
-  (`AppManifestValidator::topLevelKeys()` on `origin/master`): the
-  flattened manifest shape (`MANIFEST_KEYS` in the CLI lists 27) including
-  `demo_url` and `video_url` (rules `nullable|string|max:2048`;
-  `video_url` must be a YouTube or Vimeo URL — backend
-  `isAllowedVideoHost`, same error text as the CLI).
-- GAP (closed 30/9/26 in CLI commit `6490a4d`, merged at `39b0bb6`): the
-  CLI's `MANIFEST_KEYS` listed 25 and rejected the two keys; it now lists
-  all 27, and the `[listing]` path accepts and validates them
-  (`checkCappedUrl` on both, `isAllowedVideoHost` on `video_url` with the
-  same YouTube-or-Vimeo error text, mirroring the server-side
-  `assertAppUrl` guard). Set them under `[listing]` in the toml — the
-  flattened manifest carries them through.
-- TOML-level vs manifest-level is a deliberate distinction, not a second
-  gap: `TOP_LEVEL_TOML_KEYS` (16) still has no `demo_url` / `video_url`
-  because they live under `[listing]`, not at the top level. Only the
-  flattened manifest shape (`MANIFEST_KEYS`, 27) carries them.
+- `scopes`: required scopes, granted at install. `optional_scopes`:
+  requested later at runtime, never granted at install — same
+  grantable-scope rule, and the two lists must be disjoint (overlap is
+  rejected on both sides). See the `queek-app` skill's `scopes.md` for the
+  runtime side.
+- A dashboard action's `scope` may come from either list.
+
+## Flattened manifest keys (28 — the CLI/backend mirror)
+
+`MANIFEST_KEYS` (CLI) and `AppManifestValidator::topLevelKeys()`
+(backend) list the same 28 keys: `slug`, `name`, `description`, `icon`,
+`developer`, `version`, `distribution`, `category`, `tagline`,
+`description_long`, `highlights`, `logo_url`, `pricing`, `developer_url`,
+`privacy_url`, `support_url`, `demo_url`, `video_url`, `scopes`,
+`optional_scopes`, `webhook_topics`, `settings`, `install_url`,
+`uninstall_url`, `settings_url`, `webhook_url`, `extensions`, `dashboard`.
+`demo_url` and `video_url` are set under `[listing]` in the toml
+(`checkCappedUrl` on both; `video_url` must be a YouTube or Vimeo URL —
+`isAllowedVideoHost`, same error text both sides). TOML-level vs
+manifest-level is deliberate: `TOP_LEVEL_TOML_KEYS` (16) has no
+`demo_url` / `video_url` because they live under `[listing]`; only the
+flattened manifest shape (28) carries them.
 
 ## Extensions (`checkExtensions`)
 
@@ -49,6 +53,14 @@ fail closed: unknown fields are rejected, required fields throw.
 - `extensions.proxy.url` is required when `proxy` is present; allowed proxy
   keys ONLY: `url`, `subpath`, `share_customer_id`.
 - `extensions.blocks` must be a list of `[[extensions.blocks]]` tables.
+
+## Dashboard (`checkDashboard`)
+
+- `dashboard` accepts exactly `blocks`, `actions`, `print` — anything else
+  is an unknown-field error. Caps mirror the backend: blocks ≤ 10,
+  actions ≤ 10, print ≤ 5.
+- An action's `scope` must be a declared scope from either tier (see
+  Access above).
 
 ## Nav (`checkNav`)
 
