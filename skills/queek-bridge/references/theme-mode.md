@@ -3,7 +3,7 @@
 Sources: `@usequeek/app-sdk` `src/theme.ts` (`THEME_PARAM`,
 `themeBootstrapScript`, `applyTheme`, `installThemeListener`,
 `rememberThemeMode`, `getThemeModeFromUrl`, `THEME_STORAGE_KEY`),
-`src/browser.ts` (the `/browser` entry). (Repo: `app-sdk-wt-scopes`.)
+`src/browser.ts` (the `/browser` entry). (Repo: `usequeek/app-sdk`.)
 
 - Dark when the dashboard is dark, light when light, switching live.
 - First load: `theme` is a plain unsigned URL param (`theme=light|dark`,
@@ -15,6 +15,6 @@ Sources: `@usequeek/app-sdk` `src/theme.ts` (`THEME_PARAM`,
   follows the messages. The mode is remembered in `sessionStorage`
   (`THEME_STORAGE_KEY`, via `rememberThemeMode` / `getThemeModeFromUrl`),
   so an in-frame reload without the param still paints correctly.
-- UI rule (plan `app-ui-kit.md`, U3/U5 direction in `queek_backend`):
+- UI rule (the Queek API (docs.usequeek.com) plan `app-ui-kit.md`, U3/U5 direction):
   app UI is shadcn with the Queek theme — never restyle design tokens by
   hand.

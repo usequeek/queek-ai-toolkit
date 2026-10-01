@@ -1,12 +1,12 @@
 # Submission checklist contract
 
-Sources: `queek_backend` `app/Services/Apps/SubmissionCheckService.php`
+Sources: the Queek API (docs.usequeek.com) `app/Services/Apps/SubmissionCheckService.php`
 (check keys, levels, freshness — on `origin/master`), `routes/vendor-api.php`
 and `app/Http/Controllers/Api/Vendor/Developer/DeveloperAppController.php`
 (routes — on `origin/master`), plus the flow design
 `.agent/TASKS/active/app-review-submission-flow.md` item 4 (checklist
 semantics). Check-service and route cites name symbols on `origin/master`
-(verified 30/9/26) with no line numbers, so they can't drift.
+with no line numbers, so they can't drift.
 
 ## Item shape
 

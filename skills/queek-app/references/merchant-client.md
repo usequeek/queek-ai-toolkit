@@ -6,7 +6,7 @@ Sources: `@usequeek/app-sdk` `src/client.ts` (`X-Client-Key`,
 (`createInstallationClient`), README § API surface (client bullet),
 `scripts/gen-merchant-types.mjs` (servers normalization), `src/logger.ts`
 (`sk_(live|test)_` redaction).
-(Repo: `app-sdk-wt-bridge`.)
+(Repo: `usequeek/app-sdk`.)
 
 ## Base and auth
 

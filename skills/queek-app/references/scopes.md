@@ -7,11 +7,11 @@ Sources: `@usequeek/app-sdk` `src/scopes.ts`
 `src/handoff.ts` (`SCOPES_UPDATE_EVENT`, `ScopesUpdateData`,
 `ScopesUpdateEnvelope`), `src/install-handlers.ts`
 (`saveScopesUpdateInstallation`), `README.md` (§ Scopes);
-`queek_backend` `app/Services/Apps/AppManifestValidator.php`
+the Queek API (docs.usequeek.com) `app/Services/Apps/AppManifestValidator.php`
 (`optional_scopes`, disjoint from `scopes`),
 `routes/vendor-api.php` (`vendor/app-store/{slug}/scopes/approve`),
 `routes/app-api.php` (`installations/{installation}/scopes/revoke`).
-(Repos: `app-sdk-wt-scopes`, `queek_backend`.)
+(Repos: `usequeek/app-sdk`, the Queek API (docs.usequeek.com).)
 
 Apps declare required scopes (granted at install) plus `optional_scopes`
 (requested later, revocable) under `[access]` in the manifest (see the

@@ -8,7 +8,7 @@ Sources: `@usequeek/app-sdk` `src/signatures.ts` (`verifyQueekSignature`,
 (secret redaction), README § API surface (verify / proxy / logger
 bullets), README § Data deletion, README § Storefront app-proxy (signed
 reads).
-(Repo: `app-sdk-wt-bridge`.)
+(Repo: `usequeek/app-sdk`.)
 
 Topic webhooks and the app proxy derive their MAC keys DIFFERENTLY. Do not
 mix them up.

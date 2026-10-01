@@ -1,6 +1,6 @@
 # Built for Queek review rule
 
-Source: `queek_backend/.agent/TASKS/active/app-ui-kit.md`, item U5
+Source: the Queek API (docs.usequeek.com) plan `app-ui-kit.md`, item U5
 ('"Built for Queek" review rule').
 
 Embedded pages use the Queek theme and the bridge — checked in review, like

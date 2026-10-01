@@ -1,7 +1,7 @@
 # Manifest validation rules
 
 Sources: `@usequeek/cli` 0.14.0 `src/lib/app-manifest.ts` (repo:
-`theme-tools-wt-rel/packages/cli`) and `queek_backend`
+`usequeek/theme-tools/packages/cli`) and the Queek API (docs.usequeek.com)
 `app/Services/Apps/AppManifestValidator.php` (`topLevelKeys()`,
 `rejectUnknown`). Both validators fail closed: unknown fields are
 rejected, required fields throw.

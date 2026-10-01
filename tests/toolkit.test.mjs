@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { DEFAULT_ROOTS, PINS, CHECKS } from "./source-pins.mjs";
+import { sourceRoots, PINS, CHECKS } from "./source-pins.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => readFileSync(join(root, p), "utf8");
@@ -53,8 +53,8 @@ test("every reference file cites the source file it came from", () => {
       const body = read(`skills/${skill}/references/${ref}`);
       assert.match(
         body,
-        /(app-sdk-wt-|theme-tools-wt-|queek-app-booking|queek_backend)/,
-        `${skill}/${ref} names its source repo`,
+        /(usequeek\/app-sdk|usequeek\/theme-tools|usequeek\/queek-app-starter|Queek API)/,
+        `${skill}/${ref} names its public source`,
       );
       assert.match(
         body,
@@ -175,29 +175,57 @@ test("MUST-6: additive is plan policy plus served spec text, B1/B2 pinned", () =
 });
 
 test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
-  const roots = { ...DEFAULT_ROOTS, ...JSON.parse(process.env.TOOLKIT_SOURCE_ROOTS ?? "{}") };
+  const roots = sourceRoots();
+  const pinned = new Set();
   let checked = 0;
-  let skipped = 0;
-  for (const { root, file, ref, symbols } of CHECKS) {
+  const skipped = [...new Set(CHECKS.map((c) => c.root))].filter((r) => !roots[r]);
+  for (const { root, file, symbols } of CHECKS) {
     const repo = roots[root];
-    assert.ok(repo, `root configured for ${root}`);
-    if (!existsSync(repo)) {
-      skipped += 1;
-      continue;
+    if (!repo) continue;
+    if (!pinned.has(root)) {
+      const head = execSync(`git -C ${JSON.stringify(repo)} rev-parse HEAD`, { encoding: "utf8", timeout: 30000 }).trim();
+      assert.equal(head, PINS[root], `${root} is at ${head}, not the pinned ${PINS[root]} — re-verify the skills and bump the pin`);
+      pinned.add(root);
     }
-    let body;
-    if (ref) {
-      body = execSync(`git -C ${JSON.stringify(repo)} show ${ref}:${file}`, { encoding: "utf8", timeout: 30000 });
-    } else {
-      body = readFileSync(join(repo, file), "utf8");
-    }
+    const body = readFileSync(join(repo, file), "utf8");
     for (const symbol of symbols) {
       assert.ok(body.includes(symbol), `${root}:${file} contains ${symbol}`);
       checked += 1;
     }
   }
-  t.diagnostic(`symbols checked: ${checked}, repos skipped: ${skipped} (pins: ${Object.values(PINS).map((s) => s.slice(0, 8)).join(", ")})`);
-  if (checked === 0) t.skip("no source checkouts present — symbol guard inactive");
+  t.diagnostic(`symbols checked: ${checked}, roots skipped: ${skipped.join(", ") || "none"} (pins: ${Object.values(PINS).map((s) => s.slice(0, 8)).join(", ")})`);
+  if (checked === 0) t.skip("no source roots configured — set TOOLKIT_SOURCE_ROOTS (see tests/source-pins.mjs) to enable the symbol guard");
+});
+
+test("no private paths anywhere in tracked files", () => {
+  const wt = "wt";
+  const who = "ben" + "ny";
+  const banned = [/\/Users\//, new RegExp(`-${wt}-`), /\/home\//, new RegExp(who, "i")];
+  const walk = (dir, out = []) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full, out);
+      else if (/\.(md|json|mjs|js|sh)$/.test(entry.name)) out.push(full);
+    }
+    return out;
+  };
+  const files = walk(skillsDir)
+    .concat([
+      join(root, "README.md"),
+      join(root, "plugin.json"),
+      join(root, ".claude-plugin", "plugin.json"),
+      join(root, ".claude-plugin", "marketplace.json"),
+      join(root, ".codex-plugin", "plugin.json"),
+      ...walk(join(root, "tests")),
+    ])
+    .filter((f) => existsSync(f));
+  assert.ok(files.length > 10, "scans a real file set");
+  for (const file of files) {
+    const body = readFileSync(file, "utf8");
+    for (const pattern of banned) {
+      assert.doesNotMatch(body, pattern, `${file} leaks a private path`);
+    }
+  }
 });
 
 test("MUST-8: README states the public-repo install status honestly", () => {

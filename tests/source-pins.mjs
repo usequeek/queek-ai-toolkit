@@ -1,24 +1,35 @@
 // Pinned load-bearing symbols (MUST-7). Every backticked SDK/CLI/backend
-// symbol the skills cite must exist in the pinned checkout. Roots default
-// to the author's checkouts; override with TOOLKIT_SOURCE_ROOTS as JSON:
-// {"sdk": "/path/app-sdk-wt-scopes", "cli": "/path/cli", "backend": "...",
-//  "booking": "..."}. Files read from the working tree at the pinned SHA.
-// Missing roots SKIP (public hosts lack checkouts); present roots MUST
-// contain every symbol or the suite fails.
-export const DEFAULT_ROOTS = {
-  sdk: "/Users/benny/Documents/products/split/app-sdk-wt-scopes",
-  cli: "/Users/benny/Documents/products/packages/theme-tools-wt-rel/packages/cli",
-  backend: "/Users/benny/Documents/laravel/queek_backend-wt-singletoken",
-  booking: "/Users/benny/Documents/products/queek-app-booking",
-};
+// symbol the skills cite must exist in a checkout at the pinned SHA.
+// Source roots come ONLY from TOOLKIT_SOURCE_ROOTS, either JSON:
+//   TOOLKIT_SOURCE_ROOTS='{"sdk":"/path/to/app-sdk","cli":"/path/to/cli","backend":"/path/to/backend","booking":"/path/to/booking"}'
+// or a comma-separated name=path list:
+//   TOOLKIT_SOURCE_ROOTS='sdk=/path/to/app-sdk,cli=/path/to/cli'
+// With no roots configured the guard SKIPS (a fresh clone passes with no
+// checkouts). A configured root MUST satisfy both gates or the suite
+// fails: `git rev-parse HEAD` in that root must equal the pin below, and
+// every listed symbol must be present. On a pin mismatch, re-verify the
+// skills against the new checkout state and bump the pin.
+export function sourceRoots() {
+  const raw = (process.env.TOOLKIT_SOURCE_ROOTS ?? "").trim();
+  if (!raw) return {};
+  if (raw.startsWith("{")) return JSON.parse(raw);
+  const roots = {};
+  for (const entry of raw.split(",")) {
+    const cut = entry.indexOf("=");
+    if (cut < 0) throw new Error(`Bad TOOLKIT_SOURCE_ROOTS entry (want name=path): ${entry}`);
+    roots[entry.slice(0, cut).trim()] = entry.slice(cut + 1).trim();
+  }
+  return roots;
+}
 
 export const PINS = {
   sdk: "78a5b49fa504ddb47a58d08089f8d84142d3770d",
   cli: "aebd34bc7d7dc944993310d31ff0923bf0dc8748",
   backend: "bbc82ecbfc0dfd6341b86af0cfaeab6984b8f2df",
+  booking: "1b1c833cc7c698c7822c5adabf647d8ef4717b51",
 };
 
-// {root, file, ref?, symbols[]} — ref set reads via `git show <ref>:<file>`.
+// {root, file, symbols[]} — files read from the working tree at the pin.
 export const CHECKS = [
   { root: "sdk", file: "src/frame.ts", symbols: ["AppOutboundMessage", "AppInboundMessage", "BRIDGE_VERSION", "APP_SOURCE", "DASHBOARD_SOURCE", "MAX_HEADING_LENGTH", "MAX_TOAST_LENGTH", "MAX_PATH_LENGTH", "MAX_TARGET_LENGTH", "isAllowedOpenTarget", "parseInboundMessage", "parseOutboundMessage", "clipOutbound", "ResourceItem", "PickResourceRequest", "BridgeTheme", "resourceType", "sdkVersion"] },
   { root: "sdk", file: "src/browser.ts", symbols: ["installAuthFetch", "listenToDashboard", "sendReady", "applyTheme", "installThemeListener", "themeBootstrapScript", "THEME_PARAM", "LAUNCH_TOKEN_PARAM"] },

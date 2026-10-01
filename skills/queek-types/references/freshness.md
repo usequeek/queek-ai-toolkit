@@ -1,8 +1,8 @@
 # Freshness rule
 
-Sources: `queek_backend/config/scramble.php` (`API_VERSION`),
-`queek_backend/app/Support/Api/ApiContract.php` (`VERSION_HEADER`),
-`queek_backend/app/Providers/ScrambleServiceProvider.php` (hash header,
+Sources: the Queek API (docs.usequeek.com) `config/scramble.php` (`API_VERSION`),
+`app/Support/Api/ApiContract.php` (`VERSION_HEADER`),
+`app/Providers/ScrambleServiceProvider.php` (hash header,
 freshness-pin block), `@usequeek/app-sdk`
 `scripts/gen-merchant-types.mjs` + README § API surface (client bullet),
 the live spec `https://api.usequeek.com/docs/merchant.json`, and plan

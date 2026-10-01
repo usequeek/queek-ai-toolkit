@@ -1,13 +1,13 @@
 # Bridge behavior: SDK-enforced vs dashboard-planned
 
-Sources: `@usequeek/app-sdk` `src/frame.ts` (SDK side, shipped;
+Sources: `usequeek/app-sdk` `src/frame.ts` (SDK side, shipped;
 `AppOutboundMessage`, `AppInboundMessage`, `APP_SOURCE`,
 `DASHBOARD_SOURCE`, `BRIDGE_VERSION`, `MAX_HEADING_LENGTH`,
 `MAX_TOAST_LENGTH`, `MAX_PATH_LENGTH`, `MAX_TARGET_LENGTH`,
 `clipOutbound`, `isAllowedOpenTarget`, `parseInboundMessage`) and
-`queek_backend/.agent/TASKS/active/app-ui-kit.md` MERGED item 3 (dashboard
-side, PLANNED — no host implementation exists in `queek-merchant` as of
-30/9/26; a repo-wide search for the bridge message strings finds no
+the Queek API (docs.usequeek.com) plan `app-ui-kit.md` MERGED item 3 (dashboard
+side, PLANNED — no host implementation exists in the dashboard app; a
+repo-wide search for the bridge message strings finds no
 dashboard receiver). Every PLANNED line below must be re-verified before an
 app depends on it.
 

@@ -2,7 +2,7 @@
 
 Source: `@usequeek/app-sdk` `src/frame.ts` (`AppOutboundMessage`,
 `AppInboundMessage`, `ResourceItem`, `PickResourceRequest`,
-`BridgeTheme`). (Repo: `app-sdk-wt-bridge`.) Import these types; never
+`BridgeTheme`). (Repo: `usequeek/app-sdk`.) Import these types; never
 re-declare the strings.
 
 ## App → dashboard (`AppOutboundMessage`)

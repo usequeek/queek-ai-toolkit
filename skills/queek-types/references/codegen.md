@@ -2,7 +2,7 @@
 
 Source: `@usequeek/cli` 0.14.0 `packages/cli/src/commands/app/codegen.ts`
 (`AppCodegen`, released — verify with `queek app codegen --help`).
-(Repo: `theme-tools-wt-rel`.) This is the reference implementation — reuse
+(Repo: `usequeek/theme-tools`.) This is the reference implementation — reuse
 its logic verbatim; do not invent a second flow.
 
 `queek app codegen` — RELEASED in `@usequeek/cli` 0.14.0. It writes
@@ -22,7 +22,7 @@ queek app codegen [spec-url-or-path]
 - File-input path: `queek app codegen /tmp/merchant.json` — exported
   from the backend without a server:
   `php artisan scramble:export --api=merchant --path=/tmp/merchant.json`
-  (run in `queek_backend`). Offline codegen must use this path.
+  (run against a backend checkout). Offline codegen must use this path.
 
 ## What the command does, in order
 
