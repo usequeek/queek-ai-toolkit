@@ -9,13 +9,20 @@ Fields the document does not carry are treated as absent.
 
 Think through every dimension below for the developer's idea, then match
 each one to `needs` by `id` first, `tags` second, `title` last. A
-dimension with no matching need is unverified, not supported — say so.
-Also match the whole idea to `use_cases` by `id`, `tags`, then `title`.
+dimension with no matching need or use case is unverified, not supported —
+say so. If it is critical, do not claim the idea is buildable or scaffold
+the part that depends on it; report overall capacity as unverified. Claim
+`buildable` only when every dimension is covered by a matched critical need
+marked `supported`. Also match the whole idea to `use_cases` by `id`, `tags`,
+then `title`.
 
 When a use case matches, use its `verdict` and read its `optional_gaps`;
-do not derive a second verdict from its need statuses. A `buildable` use
-case remains buildable with optional gaps. Report each gap and its
-documented workaround.
+do not derive a second verdict from its need statuses. When
+`optional_gaps` is not present, derive it from the referenced needs that are
+non-critical and whose status is not `supported`, and report those gaps
+without changing the document's verdict. A `buildable` use case remains
+buildable with optional gaps when every critical dimension is matched to a
+supported need. Report each gap and its documented workaround.
 
 When no use case matches, classify needs as critical or optional from the
 idea you decomposed, and label the result as your own assessment. Verdict

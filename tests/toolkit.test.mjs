@@ -326,6 +326,22 @@ test("capacity check reads the documented live docs and bakes in no capability f
   assert.ok(body.includes("`optional_gaps`"), "names optional gaps");
   const normalized = body.replace(/\s+/g, " ");
   assert.ok(
+    normalized.includes("When `optional_gaps` is not present, derive it from the referenced needs"),
+    "derives optional gaps when the field is absent",
+  );
+  assert.ok(
+    normalized.includes("If a critical dimension is unmatched, mark that dimension unverified, do not scaffold its dependent part"),
+    "an unverified critical dimension blocks buildable work",
+  );
+  assert.ok(
+    normalized.includes("If `shopify` is `null` and `shopify_null_reason` is present, say \"no Shopify equivalent: <reason>\" instead of a link"),
+    "describes nullable Shopify equivalents",
+  );
+  assert.ok(
+    normalized.includes("If `probe`, `probe_pass`, `internal`, or `generated_at` are present, ignore them and never cite them"),
+    "ignores legacy fields when present",
+  );
+  assert.ok(
     normalized.includes("Verdict rule: `blocked` if any critical need is `missing`; `partial` if any critical need is `partial` and none is `missing`; otherwise `buildable`; optional needs never change it."),
     "states the critical-only verdict rule",
   );
