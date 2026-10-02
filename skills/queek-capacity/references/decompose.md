@@ -1,12 +1,29 @@
 # Decompose the idea into capabilities
 
-Sources: the Queek API (docs.usequeek.com) `docs/capabilities.json`
-(schema: `needs[]`, `use_cases[]`, `primitives`); the verdict words
-`buildable`, `partial`, `blocked` are the doc's own.
+Sources: the Queek API (docs.usequeek.com)
+`docs/capabilities/llms.txt` and `docs/capabilities.json` (document
+fields: `meta`, `primitives`, `needs[]`, `use_cases[]`). Public
+`surface[]` entries are `{kind,name}` primitives. A matching use case's
+`verdict` and `optional_gaps[{id,status}]` are the document's assessment.
+Fields the document does not carry are treated as absent.
 
 Think through every dimension below for the developer's idea, then match
 each one to `needs` by `id` first, `tags` second, `title` last. A
 dimension with no matching need is unverified, not supported — say so.
+Also match the whole idea to `use_cases` by `id`, `tags`, then `title`.
+
+When a use case matches, use its `verdict` and read its `optional_gaps`;
+do not derive a second verdict from its need statuses. A `buildable` use
+case remains buildable with optional gaps. Report each gap and its
+documented workaround.
+
+When no use case matches, classify needs as critical or optional from the
+idea you decomposed, and label the result as your own assessment. Verdict
+rule: `blocked` if any critical need is `missing`; `partial` if any
+critical need is `partial` and none is `missing`; otherwise `buildable`.
+Optional needs never change this verdict. List optional needs with
+`partial` or `missing` status as `optional_gaps`, with their documented
+workarounds.
 
 - Payments: taking money, refunds, payouts to the merchant.
 - Shipping: rates at checkout, labels, tracking, fulfilment events.

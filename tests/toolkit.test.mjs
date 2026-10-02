@@ -323,6 +323,13 @@ test("capacity check reads the documented live docs and bakes in no capability f
   for (const field of ["`primitives`", "`needs[]`", "`use_cases[]`", "`verdict`", "`workaround`", "`status`"]) {
     assert.ok(body.includes(field), `names schema field ${field}`);
   }
+  assert.ok(body.includes("`optional_gaps`"), "names optional gaps");
+  const normalized = body.replace(/\s+/g, " ");
+  assert.ok(
+    normalized.includes("Verdict rule: `blocked` if any critical need is `missing`; `partial` if any critical need is `partial` and none is `missing`; otherwise `buildable`; optional needs never change it."),
+    "states the critical-only verdict rule",
+  );
+  assert.doesNotMatch(body, /worst.{0,20}status/i, "does not use worst status to decide the verdict");
   // Schema fields only: no concrete scope names, webhook topics,
   // manifest keys, secrets, or foreign doc hosts baked in.
   const baked = [

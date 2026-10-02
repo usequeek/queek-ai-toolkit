@@ -28,12 +28,16 @@ Primary, small first:
   the response carries the `x-queek-capabilities-sha` header, quote it
   in the report so the developer knows which doc revision was checked.
 
-Schema (fixed): `meta`, `primitives` (mechanical facts), `needs[]`
-(`id`, `area`, `title`, `summary`, `status` of `supported`, `partial`
-or `missing`, `surface[]`, `shopify{name,url}`, `limits[]`,
-`workaround`, `tags[]`), `use_cases[]` (`id`, `title`, `summary`,
-`needs[{id,critical}]`, `verdict` of `buildable`, `partial` or
-`blocked`).
+Document shape: `meta` (`schema`, `git_sha`, `doc_url`), `primitives`
+(mechanical facts), `needs[]` (`id`, `area`, `title`, `summary`,
+`status` of `supported`, `partial` or `missing`, `surface[]` of public
+`{kind,name}` primitives, `shopify{name,url}`, `limits[]`, `workaround`,
+`tags[]`), and `use_cases[]` (`id`, `title`, `summary`,
+`needs[{id,critical,status}]`, `verdict`, `optional_gaps[{id,status}]`).
+`meta.git_sha` is a content hash used as the document revision. Fields the
+document does not carry are treated as absent. Treat a missing
+`optional_gaps` as none; ignore `generated_at` if present. Do not expect a
+timestamp, `probe`, or `internal` fields.
 
 Fallback, explicit: if the request fails or 404s (the endpoint may not
 be deployed yet), say so, fall back to
@@ -46,18 +50,28 @@ and tell the developer capacity could not be verified — never guess.
    the idea needs.
 2. Decompose the idea into capabilities — see
    `cat references/decompose.md` for the dimensions to think through.
-3. Match each capability to `needs` by `id`, `tags`, then `title`;
-   match the whole idea to `use_cases` the same way.
-4. For each need report: `status`, the supporting `primitive`(s),
-   `limits`, and the doc's own `workaround`.
-5. Take the overall verdict from the matching `use_case` when one
-   matches; otherwise the worst need `status` decides (`missing`
-   anywhere critical means blocked).
-6. Write the report — see `cat references/report-format.md`.
+3. Match the whole idea to `use_cases` by `id`, `tags`, then `title`.
+   Match each decomposed capability to `needs` by `id`, `tags`, then
+   `title`.
+4. If a `use_case` matches, read its `verdict` and `optional_gaps`;
+   never compute a replacement verdict from need statuses. A `buildable`
+   use case stays buildable when it has optional gaps: name those gaps
+   and explain their documented workarounds.
+5. If no `use_case` matches, match the decomposed capabilities to needs
+   and classify each as critical or optional from the idea's requirements.
+   State that this is your assessment. Verdict rule: `blocked` if any
+   critical need is `missing`; `partial` if any critical need is `partial`
+   and none is `missing`; otherwise `buildable`; optional needs never
+   change it. List optional needs that are `partial` or `missing` as
+   `optional_gaps` and explain documented workarounds.
+6. For each need report its `status`, supporting `surface` primitive(s),
+   `limits`, and the doc's `workaround`.
+7. Write the report — see `cat references/report-format.md`.
 
 ## Decision rules
 
-- Buildable: continue with the `queek-app` skill.
+- Buildable: continue with the `queek-app` skill. Mention any optional
+  gaps and their documented workarounds in the report.
 - Partial: propose the buildable subset plus the doc's workarounds,
   and ask the developer to confirm before scaffolding.
 - Blocked: do not scaffold a placeholder implementation. Explain what
