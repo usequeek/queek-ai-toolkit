@@ -16,6 +16,7 @@ const EXPECTED_SKILLS = [
   "queek-bridge",
   "queek-review",
   "queek-types",
+  "queek-capacity",
 ];
 
 const EXPECTED_REFS = {
@@ -24,9 +25,10 @@ const EXPECTED_REFS = {
   "queek-bridge": ["messages.md", "bridge-spec.md", "theme-mode.md"],
   "queek-review": ["built-for-queek.md", "submission-checklist.md"],
   "queek-types": ["codegen.md", "freshness.md"],
+  "queek-capacity": ["decompose.md", "report-format.md"],
 };
 
-test("all five skills exist with SKILL.md + references/", () => {
+test("all six skills exist with SKILL.md + references/", () => {
   const found = readdirSync(skillsDir, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name)
@@ -57,8 +59,9 @@ test("every reference file cites the source file it came from", () => {
         `${skill}/${ref} names its public source`,
       );
       assert.match(
+        // json|txt: the live capability docs are contract files too
         body,
-        /`[\w./-]+\.(ts|md|php|toml|mjs)(:\d+(-\d+)?)?`/,
+        /`[\w./-]+\.(ts|md|php|toml|mjs|json|txt)(:\d+(-\d+)?)?`/,
         `${skill}/${ref} cites a source file`,
       );
     }
@@ -287,7 +290,7 @@ test("no driftable file:line source cites anywhere under skills/", () => {
   // function name instead. This scans every markdown file under skills/
   // (SKILL.md + references/) and fails on any backticked source cite with
   // a line number.
-  const lineCite = /`[\w./-]+\.(ts|md|php|toml|mjs|json):\d/;
+  const lineCite = /`[\w./-]+\.(ts|md|php|toml|mjs|json|txt):\d/;
   const walk = (dir, out = []) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, entry.name);
@@ -302,6 +305,48 @@ test("no driftable file:line source cites anywhere under skills/", () => {
     const body = readFileSync(file, "utf8");
     assert.doesNotMatch(body, lineCite, `${file} carries a driftable :<digits> cite`);
   }
+});
+
+test("capacity check reads the documented live docs and bakes in no capability facts", () => {
+  const body = ["SKILL.md", "references/decompose.md", "references/report-format.md"]
+    .map((f) => read(`skills/queek-capacity/${f}`))
+    .join("\n");
+  for (const url of [
+    "https://api.usequeek.com/docs/capabilities.json",
+    "https://api.usequeek.com/docs/capabilities/llms.txt",
+    "https://api.usequeek.com/docs/merchant.json",
+  ]) {
+    assert.ok(body.includes(url), `names ${url}`);
+  }
+  assert.ok(body.includes("x-queek-capabilities-sha"), "quotes the revision header");
+  assert.ok(body.includes("could not be verified"), "fallback admits unverified capacity");
+  for (const field of ["`primitives`", "`needs[]`", "`use_cases[]`", "`verdict`", "`workaround`", "`status`"]) {
+    assert.ok(body.includes(field), `names schema field ${field}`);
+  }
+  // Schema fields only: no concrete scope names, webhook topics,
+  // manifest keys, secrets, or foreign doc hosts baked in.
+  const baked = [
+    "merchant-orders-read",
+    "merchant-orders-update",
+    "merchant-items-read",
+    "merchant-items-detail",
+    "merchant-items-delete",
+    "merchant-business_profile-read",
+    "merchant-app-requirements-write",
+    "orders/paid",
+    "app/scopes_update",
+    "whsec_",
+    "X-Client-Key",
+    "Idempotency-Key",
+    "optional_scopes",
+    "merchant_page_url",
+    "shopify.dev",
+    "myshopify",
+  ];
+  for (const fact of baked) {
+    assert.doesNotMatch(body, new RegExp(fact.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `no baked-in fact ${fact}`);
+  }
+  assert.match(read("skills/queek-app/SKILL.md"), /queek-capacity/, "queek-app routes to queek-capacity");
 });
 
 test("docs URLs mentioned in skills resolve to real contract hosts", () => {

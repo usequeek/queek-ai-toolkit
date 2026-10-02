@@ -1,12 +1,15 @@
 ---
 name: queek-app
-description: "Build a Queek app on the Merchant API: install/uninstall/settings handoff (verify first), Standard Webhooks and app-proxy verification with whsec_ secrets, and the typed Merchant API client over X-Client-Key with Idempotency-Key writes. Use for any Queek app install flow, webhook handler, or Merchant API call."
+description: "Check platform capacity via the queek-capacity skill first, then build a Queek app on the Merchant API: install/uninstall/settings handoff (verify first), Standard Webhooks and app-proxy verification with whsec_ secrets, and the typed Merchant API client over X-Client-Key with Idempotency-Key writes. Use for any Queek app install flow, webhook handler, or Merchant API call."
 metadata:
   author: Queek
   version: "0.1.0"
 ---
 
 # Queek app
+
+Building something new (not fixing this app's code)? Run the capacity
+check first — see the `queek-capacity` skill — then come back here.
 
 Framework-agnostic, Web-standard handlers (`Request` in, `Response` out).
 Read the reference file that fits the task before writing code:
