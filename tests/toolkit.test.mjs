@@ -69,7 +69,7 @@ test("every reference file cites the source file it came from", () => {
 });
 
 test("plugin manifests parse and name the same plugin", () => {
-  for (const file of [".claude-plugin/plugin.json", ".codex-plugin/plugin.json", "plugin.json"]) {
+  for (const file of [".claude-plugin/plugin.json", ".codex-plugin/plugin.json"]) {
     const manifest = JSON.parse(read(file));
     assert.equal(manifest.name, "queek-plugin", file);
     assert.equal(manifest.license, "MIT", file);
@@ -97,7 +97,6 @@ test("zero telemetry: no posting, tracking, or usage-reporting surface", () => {
   };
   const files = walk(skillsDir)
     .concat([
-      join(root, "plugin.json"),
       join(root, ".claude-plugin", "plugin.json"),
       join(root, ".claude-plugin", "marketplace.json"),
       join(root, ".codex-plugin", "plugin.json"),
@@ -112,7 +111,7 @@ test("zero telemetry: no posting, tracking, or usage-reporting surface", () => {
   }
 });
 
-test("MUST-1: topic decode vs proxy full-string are split, never mixed", () => {
+test("topic webhooks decode the secret; the app proxy signs the full string", () => {
   const body = read("skills/queek-app/references/webhooks.md");
   assert.match(body, /DIFFERENTLY/, "warns the derivations differ");
   assert.match(body, /secretKeyBytes/, "topic cites the decoder");
@@ -123,7 +122,7 @@ test("MUST-1: topic decode vs proxy full-string are split, never mixed", () => {
   assert.doesNotMatch(read("skills/queek-app/SKILL.md"), /never base64-decode/i, "skill rule fixed");
 });
 
-test("MUST-2: handoff names the three secrets, denies only tokens", () => {
+test("install handoff names the three per-installation secrets and denies only tokens", () => {
   const body = read("skills/queek-app/references/install-handoff.md");
   for (const secret of ["webhook_secret", "proxy_secret", "embed_secret"]) {
     assert.match(body, new RegExp(secret), `names ${secret}`);
@@ -132,16 +131,15 @@ test("MUST-2: handoff names the three secrets, denies only tokens", () => {
   assert.doesNotMatch(body, /no per-installation secrets cross/i, "false claim gone");
 });
 
-test("MUST-3: submit routes cite origin/master by symbol with version-scoped endpoints", () => {
+test("submission checklist names the version-scoped routes and the freshness window", () => {
   const body = read("skills/queek-review/references/submission-checklist.md");
-  for (const s of ["apps/{app}/submit", "versions/{sequence}/submission", "versions/{sequence}/submit", "versions/{sequence}/withdraw", "submitVersion", "withdraw", "::submission", "::submit", "SubmissionCheckService", "FRESHNESS"]) {
+  for (const s of ["apps/{app}/submit", "versions/{sequence}/submission", "versions/{sequence}/submit", "versions/{sequence}/withdraw", "vendor/developer/", "24 hours", "{ key, level, ok, detail, at }"]) {
     assert.ok(body.includes(s), `cites ${s}`);
   }
   assert.doesNotMatch(body, /vendor-api\.php:\d/, "no driftable route line numbers");
-  assert.doesNotMatch(body, /vendor-api\.php:1049/, "stale working-tree line gone");
 });
 
-test("MUST-4: bridge marks dashboard behavior PLANNED, uses exact field names", () => {
+test("bridge spec marks dashboard behavior PLANNED and uses exact field names", () => {
   const body = read("skills/queek-bridge/references/bridge-spec.md");
   assert.match(body, /PLANNED/, "dashboard half marked planned");
   assert.match(body, /resourceType/, "exact picker field name");
@@ -150,7 +148,7 @@ test("MUST-4: bridge marks dashboard behavior PLANNED, uses exact field names", 
   assert.doesNotMatch(body, /\{\s*type:\s*'product'\s*\}/, "wrong shape gone");
 });
 
-test("MUST-5: manifest lists all keys, mirrors the 28-key shape, labels trimming", () => {
+test("manifest rules list all keys, the 28-key mirror, and optional-scope disjointness", () => {
   const rules = read("skills/queek-manifest/references/manifest-rules.md");
   for (const key of ["handle", "version", "distribution", "icon", "developer", "category", "dashboard", "dev", "demo_url", "video_url", "optional_scopes"]) {
     assert.match(rules, new RegExp(`\`${key}\``), `rules list ${key}`);
@@ -164,20 +162,19 @@ test("MUST-5: manifest lists all keys, mirrors the 28-key shape, labels trimming
   assert.match(read("skills/queek-manifest/references/manifest-shape.md"), /optional_scopes/, "shape shows the access table");
 });
 
-test("MUST-6: additive is plan policy plus served spec text, B1/B2 pinned", () => {
+test("freshness rule states the additive policy and the spec hash pin", () => {
   const fresh = read("skills/queek-types/references/freshness.md");
   assert.match(fresh, /POLICY/, "additive labeled policy");
-  assert.match(fresh, /\(B2\)/, "B2 pin stated");
-  assert.match(fresh, /\(B1\)/, "B1 pin stated");
+  assert.match(fresh, /Additive-only under v1/, "served spec text quoted");
   assert.match(fresh, /x-queek-spec-sha/, "hash pin named");
-  assert.match(fresh, /ScrambleServiceProvider/, "hash header source cited");
+  assert.match(fresh, /X-Queek-Api-Version/, "runtime version header named");
   assert.doesNotMatch(fresh, /unlanded/, "no stale unlanded claims remain");
   assert.doesNotMatch(fresh, /landed/, "no release-history prose");
   assert.match(read("skills/queek-types/SKILL.md"), /POLICY/, "skill echoes policy framing");
   assert.match(read("skills/queek-types/SKILL.md"), /queek app codegen/, "skill names the released path");
 });
 
-test("MUST-7: every cited symbol exists in pinned checkouts", (t) => {
+test("every pinned source symbol exists in the configured checkouts", (t) => {
   const roots = sourceRoots();
   const pinned = new Set();
   let checked = 0;
@@ -215,7 +212,6 @@ test("no private paths anywhere in tracked files", () => {
   const files = walk(skillsDir)
     .concat([
       join(root, "README.md"),
-      join(root, "plugin.json"),
       join(root, ".claude-plugin", "plugin.json"),
       join(root, ".claude-plugin", "marketplace.json"),
       join(root, ".codex-plugin", "plugin.json"),
@@ -231,7 +227,7 @@ test("no private paths anywhere in tracked files", () => {
   }
 });
 
-test("MUST-8: README states the public-repo install status honestly", () => {
+test("README documents the install and update routes", () => {
   const body = read("README.md");
   assert.match(body, /github\.com\/usequeek\/queek-ai-toolkit/, "public repo named");
   assert.match(body, /npx skills add usequeek\/queek-ai-toolkit/, "skills-add route documented");
@@ -334,8 +330,8 @@ test("capacity check reads the documented live docs and bakes in no capability f
     "an unverified critical dimension blocks buildable work",
   );
   assert.ok(
-    normalized.includes("If `shopify` is `null` and `shopify_null_reason` is present, say \"no Shopify equivalent: <reason>\" instead of a link"),
-    "describes nullable Shopify equivalents",
+    normalized.includes("Use only the fields named above"),
+    "ignores document fields outside the described schema",
   );
   assert.ok(
     normalized.includes("If `probe`, `probe_pass`, `internal`, or `generated_at` are present, ignore them and never cite them"),
@@ -363,8 +359,6 @@ test("capacity check reads the documented live docs and bakes in no capability f
     "Idempotency-Key",
     "optional_scopes",
     "merchant_page_url",
-    "shopify.dev",
-    "myshopify",
   ];
   for (const fact of baked) {
     assert.doesNotMatch(body, new RegExp(fact.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `no baked-in fact ${fact}`);

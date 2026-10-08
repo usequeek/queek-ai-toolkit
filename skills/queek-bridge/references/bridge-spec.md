@@ -4,19 +4,17 @@ Sources: `usequeek/app-sdk` `src/frame.ts` (SDK side, shipped;
 `AppOutboundMessage`, `AppInboundMessage`, `APP_SOURCE`,
 `DASHBOARD_SOURCE`, `BRIDGE_VERSION`, `MAX_HEADING_LENGTH`,
 `MAX_TOAST_LENGTH`, `MAX_PATH_LENGTH`, `MAX_TARGET_LENGTH`,
-`clipOutbound`, `isAllowedOpenTarget`, `parseInboundMessage`) and
-the Queek API (docs.usequeek.com) plan `app-ui-kit.md` MERGED item 3 (dashboard
-side, PLANNED — no host implementation exists in the dashboard app; a
-repo-wide search for the bridge message strings finds no
-dashboard receiver). Every PLANNED line below must be re-verified before an
-app depends on it.
+`clipOutbound`, `isAllowedOpenTarget`, `parseInboundMessage`) and the
+dashboard side, which is PLANNED: treat a dashboard behavior as available
+only when the dashboard declares the matching capability on the handshake.
+Every PLANNED line below must be re-verified before an app depends on it.
 
 ## Handshake (SDK side)
 
 `ready` (in `AppOutboundMessage`) carries `capabilities` + `sdkVersion`;
 app source constant `APP_SOURCE = "queek-app"`, dashboard
 `DASHBOARD_SOURCE = "queek-merchant"`. The app declares what it speaks; old
-apps degrade to the current dashboard chrome (plan wording).
+apps degrade to the current dashboard chrome.
 
 ## What the SDK enforces today (`src/frame.ts`)
 
@@ -38,7 +36,7 @@ apps degrade to the current dashboard chrome (plan wording).
   `capabilities` + `bridge`; SDK constant `BRIDGE_VERSION = "1"`. Absent on
   legacy dashboards — assume the v0 set (ready/token/resize only).
 
-## PLANNED dashboard behaviors (app-ui-kit.md MERGED item 3 — NOT in code)
+## PLANNED dashboard behaviors (dashboard side — confirm via handshake `capabilities`)
 
 - Per-frame rate limiting of bridge messages.
 - The picker UI: `pick-resource` with `resourceType: "product"` (field name
@@ -49,6 +47,6 @@ apps degrade to the current dashboard chrome (plan wording).
   shown; one picker at a time, throttled.
 - Resumable paths: `navigated{path}` → dashboard replaces the URL;
   back/forward → `navigate{path}` with a loop guard; apps never navigate
-  the frame themselves (app-ui-kit.md items 2, 2b).
+  the frame themselves.
 - `title`, `title-action`, `toast`, `save-bar` / `save-bar-action`,
   `navigate`, `theme{light|dark}` + `locale` rendering in dashboard chrome.

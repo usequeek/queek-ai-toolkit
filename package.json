@@ -5,6 +5,10 @@
   "description": "Queek AI Toolkit — agent skills for building Queek apps (install handoff, webhooks, manifest, bridge, review, Merchant API types). Zero telemetry.",
   "author": "Queek",
   "license": "MIT",
+  "homepage": "https://github.com/usequeek/queek-ai-toolkit#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/usequeek/queek-ai-toolkit.git" },
+  "bugs": { "url": "https://github.com/usequeek/queek-ai-toolkit/issues" },
+  "keywords": ["queek", "ai", "agent-skills", "claude-code", "codex", "merchant-api"],
   "type": "module",
   "scripts": {
     "test": "node --test tests/toolkit.test.mjs"

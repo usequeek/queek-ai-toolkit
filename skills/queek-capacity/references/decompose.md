@@ -1,6 +1,6 @@
 # Decompose the idea into capabilities
 
-Sources: the Queek API (docs.usequeek.com)
+Sources: the Queek API live capability docs
 `docs/capabilities/llms.txt` and `docs/capabilities.json` (document
 fields: `meta`, `primitives`, `needs[]`, `use_cases[]`). Public
 `surface[]` entries are `{kind,name}` primitives. A matching use case's

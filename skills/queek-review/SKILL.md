@@ -13,5 +13,5 @@ Two references, read both before a submission:
 - The Built for Queek rule → `cat references/built-for-queek.md`
 - The submission checklist contract → `cat references/submission-checklist.md`
 
-The only authored content in this skill is the "Built for Queek" name.
-Every rule cites its source file; nothing else is invented.
+Each reference names its source. If the source disagrees with a skill,
+the source wins.

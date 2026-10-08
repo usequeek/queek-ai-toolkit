@@ -1,5 +1,5 @@
-// Pinned load-bearing symbols (MUST-7). Every backticked SDK/CLI/backend
-// symbol the skills cite must exist in a checkout at the pinned SHA.
+// Pinned source symbols. Every SDK/CLI/API symbol the skills depend on must
+// exist in a checkout at the pinned SHA.
 // Source roots come ONLY from TOOLKIT_SOURCE_ROOTS, either JSON:
 //   TOOLKIT_SOURCE_ROOTS='{"sdk":"/path/to/app-sdk","cli":"/path/to/cli","backend":"/path/to/backend","booking":"/path/to/booking"}'
 // or a comma-separated name=path list:

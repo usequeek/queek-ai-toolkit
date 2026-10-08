@@ -1,6 +1,6 @@
 # Capacity report format
 
-Sources: the Queek API (docs.usequeek.com)
+Sources: the Queek API live capability docs
 `docs/capabilities/llms.txt` (compact) and `docs/capabilities.json`
 (detail); when the verdict allows building, continue with the
 `queek-app` skill (`skills/queek-app/SKILL.md`).
@@ -59,12 +59,9 @@ The buildable subset only — every item traces to a need the doc marks
 
 ## 4. What is blocked and why
 
-Each blocked item names the exact missing platform primitive and the
-doc's `shopify{name,url}` equivalent for it, so the developer can
-compare with the platform they may already know. If `shopify` is `null`
-and `shopify_null_reason` is present, say "no Shopify equivalent: <reason>"
-instead of a link. No equivalent in the doc means writing "no equivalent
-listed", never inventing one.
+Each blocked item names the exact missing platform primitive (the need
+`id` and its `summary`) and the doc's `limits`. If the doc lists nothing
+further, write "nothing listed", never inventing one.
 
 ## 5. Optional gaps and workarounds
 

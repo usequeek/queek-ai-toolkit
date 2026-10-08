@@ -19,10 +19,8 @@ queek app codegen [spec-url-or-path]
 
 - Default source (no arg): the live spec
   `https://api.usequeek.com/docs/merchant.json`.
-- File-input path: `queek app codegen /tmp/merchant.json` — exported
-  from the backend without a server:
-  `php artisan scramble:export --api=merchant --path=/tmp/merchant.json`
-  (run against a backend checkout). Offline codegen must use this path.
+- File-input path: `queek app codegen ./merchant.json` — a copy of the
+  spec saved from the URL above. Offline codegen must use this path.
 
 ## What the command does, in order
 
@@ -33,12 +31,11 @@ queek app codegen [spec-url-or-path]
 2. Loud sanity check (fails the run, never commits silently): the spec must
    be OpenAPI `3.1.0` with a `paths` object containing `/orders/import`
    (the import op the SDK depends on must exist). HTML error pages are
-   refused. The check pins the merchant-scoped export — Scramble
-   `--api=merchant` strips the `/api/v1/merchant` prefix, so paths are
-   scope-relative.
+   refused. The check pins the merchant-scoped spec, whose paths are
+   relative to `/api/v1/merchant`.
 3. Normalize exactly one field: `servers` →
    `[{ url: "https://api.usequeek.com/api/v1/merchant", description: "Current" }]`.
-   Paths and schemas are untouched. (A local Scramble export points
+   Paths and schemas are untouched. (A locally exported spec can point
    `servers` at localhost; the reviewed contract is the public base.)
 4. Run `openapi-typescript` → the committed generated types
    `types/merchant.ts`. A rerun with an unchanged spec writes nothing.

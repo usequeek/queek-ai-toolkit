@@ -1,10 +1,9 @@
 # Manifest validation rules
 
 Sources: `@usequeek/cli` 0.14.0 `src/lib/app-manifest.ts` (repo:
-`usequeek/theme-tools/packages/cli`) and the Queek API (docs.usequeek.com)
-`app/Services/Apps/AppManifestValidator.php` (`topLevelKeys()`,
-`rejectUnknown`). Both validators fail closed: unknown fields are
-rejected, required fields throw.
+`usequeek/theme-tools/packages/cli`) and the Queek API's manifest
+validator, which mirrors it. Both validators fail closed: unknown fields
+are rejected, required fields throw.
 
 ## Top-level TOML keys (all 16 — `TOP_LEVEL_TOML_KEYS`)
 
@@ -29,10 +28,10 @@ rejected, required fields throw.
   runtime side.
 - A dashboard action's `scope` may come from either list.
 
-## Flattened manifest keys (28 — the CLI/backend mirror)
+## Flattened manifest keys (28 — the CLI/API mirror)
 
-`MANIFEST_KEYS` (CLI) and `AppManifestValidator::topLevelKeys()`
-(backend) list the same 28 keys: `slug`, `name`, `description`, `icon`,
+`MANIFEST_KEYS` (CLI) and the Queek API validator list the same 28
+keys: `slug`, `name`, `description`, `icon`,
 `developer`, `version`, `distribution`, `category`, `tagline`,
 `description_long`, `highlights`, `logo_url`, `pricing`, `developer_url`,
 `privacy_url`, `support_url`, `demo_url`, `video_url`, `scopes`,
@@ -57,7 +56,7 @@ flattened manifest shape (28) carries them.
 ## Dashboard (`checkDashboard`)
 
 - `dashboard` accepts exactly `blocks`, `actions`, `print` — anything else
-  is an unknown-field error. Caps mirror the backend: blocks ≤ 10,
+  is an unknown-field error. Caps mirror the Queek API: blocks ≤ 10,
   actions ≤ 10, print ≤ 5.
 - An action's `scope` must be a declared scope from either tier (see
   Access above).

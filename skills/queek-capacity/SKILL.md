@@ -31,19 +31,18 @@ Primary, small first:
 Document shape: `meta` (`schema`, `git_sha`, `doc_url`), `primitives`
 (mechanical facts), `needs[]` (`id`, `area`, `title`, `summary`,
 `status` of `supported`, `partial` or `missing`, `surface[]` of public
-`{kind,name}` primitives, nullable `shopify{name,url}` (when `null`,
-`shopify_null_reason` may explain why there is no equivalent), `limits[]`, `workaround`,
-`tags[]`), and `use_cases[]` (`id`, `title`, `summary`,
+`{kind,name}` primitives, `limits[]`, `workaround`, `tags[]`), and
+`use_cases[]` (`id`, `title`, `summary`,
 `needs[{id,critical,status}]`, `verdict`, `optional_gaps[{id,status}]`).
 `meta.git_sha` is a content hash used as the document revision. Fields the
 document does not carry are treated as absent. When `optional_gaps` is not
 present, derive it from the referenced needs that
 are non-critical and whose status is not `supported`; report those gaps
 without changing the document's verdict. If `probe`, `probe_pass`, `internal`,
-or `generated_at` are present, ignore them and never cite them.
+or `generated_at` are present, ignore them and never cite them. Use only
+the fields named above.
 
-Fallback, explicit: if the request fails or 404s (the endpoint may not
-be deployed yet), say so, fall back to
+Fallback, explicit: if the request fails or 404s, say so, fall back to
 `https://api.usequeek.com/docs/merchant.json` plus docs.usequeek.com,
 and tell the developer capacity could not be verified — never guess.
 

@@ -17,6 +17,6 @@ before writing a manifest:
 
 The CLI validator (`@usequeek/cli` `src/lib/app-manifest.ts`) fails closed
 on unknown fields — `Unknown field 'x' in manifest.` — and so does the
-backend (`AppManifestValidator::rejectUnknown`). `references/manifest-rules.md`
-lists every accepted key for both. Do not invent keys; if a key you need is
+Queek API. `references/manifest-rules.md` lists every accepted key for
+both. Do not invent keys; if a key you need is
 not listed there, it does not exist.

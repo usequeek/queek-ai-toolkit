@@ -15,6 +15,5 @@ Sources: `@usequeek/app-sdk` `src/theme.ts` (`THEME_PARAM`,
   follows the messages. The mode is remembered in `sessionStorage`
   (`THEME_STORAGE_KEY`, via `rememberThemeMode` / `getThemeModeFromUrl`),
   so an in-frame reload without the param still paints correctly.
-- UI rule (the Queek API (docs.usequeek.com) plan `app-ui-kit.md`, U3/U5 direction):
-  app UI is shadcn with the Queek theme — never restyle design tokens by
-  hand.
+- UI rule: app UI is shadcn with the Queek theme — never restyle design
+  tokens by hand.

@@ -1,20 +1,13 @@
 # Manifest shape
 
 Sources: the validator contract — `@usequeek/cli`
-`src/lib/app-manifest.ts` (repo: `usequeek/theme-tools`) and the Queek API
-(docs.usequeek.com) `app/Services/Apps/AppManifestValidator.php`. Groups
-map 1:1 onto the backend manifest keys ([listing], [access], [webhooks],
-[app], [[settings]], [extensions]).
+`src/lib/app-manifest.ts` (repo: `usequeek/theme-tools`) and the Queek API's
+manifest validator. Groups map 1:1 onto the manifest keys ([listing],
+[access], [webhooks], [app], [[settings]], [extensions]).
 
-ILLUSTRATIVE, TRIMMED example (not a copy of any shipped toml): cut
-from a real app manifest and extended by one line. The source carries five
-`[[extensions.nav]]` tables — two are shown (`Bookings` → `/admin`,
-`Services` → `/admin/services`); cut: `Calendar` → `/admin/calendar`,
-`Hours` → `/admin/hours`, `Settings` → `/admin/settings`. The source
-block schema carries two fields — one is shown (`date`); cut: `time`.
-ADDED (illustrative, the source does not carry it): the
-`optional_scopes` line, to show the `[access]` table shape. Shapes of
-everything shown match the source.
+ILLUSTRATIVE, TRIMMED example (not a copy of any shipped manifest): a
+service-booking app with two nav items and one block field. Real manifests
+can carry more of each. Shapes of everything shown match the validator.
 
 ```toml
 slug = "booking"

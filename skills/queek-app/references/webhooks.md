@@ -23,7 +23,7 @@ mix them up.
 - Key derivation is `secretKeyBytes`: strip the `whsec_` prefix,
   base64-decode the remainder, and use those bytes as the HMAC-SHA256 key.
   A secret without the prefix (or with undecodable base64) falls back to
-  the raw string — mirroring the backend's `keyFor()`.
+  the raw string — mirroring the Queek API's own key derivation.
 - Wire format: one or more space-delimited `v1,<base64>` signatures in
   `webhook-signature`; ANY match verifies (rotation grace).
   `signQueekPayload` emits `v1,<base64>`.
@@ -44,8 +44,8 @@ mix them up.
   here breaks verification.
 - Canonical string (`buildProxyCanonicalString`):
   `path\nshop\nts\nsorted(k=v&...)` — sig excluded, keys byte-sorted,
-  rawurlencoded pairs. Mirrors backend `AppProxyService::signature()` exactly.
-- Skew: 5-minute default floored at 60 s like the backend
+  rawurlencoded pairs. Matches the Queek API's signer exactly.
+- Skew: 5-minute default floored at 60 s like the Queek API
   (`proxySkewExceeded`).
 - Replay: single-use `jti` is claimed per delivery (`verifyProxyDelivery`,
   `PROXY_NONCE_PARAM = "jti"`); `handleProxyRequest` serves GET only (other
@@ -54,7 +54,7 @@ mix them up.
 ## App proxy — delivery plumbing
 
 - `verifyProxyQuery` / `verifyProxyQueryDetailed` (`proxy.ts`): app-proxy
-  query verification byte-exact with the backend —
+  query verification byte-exact with the Queek API —
   `path\nshop\nts\nsorted(k=v&...)`, hex HMAC-SHA256 over the FULL
   `whsec_…` string, 5-minute skew floored at 60 s, `timingSafeEqual`,
   previous-secret grace over the secrets list (README § API surface, proxy

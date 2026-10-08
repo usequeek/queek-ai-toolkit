@@ -8,9 +8,10 @@ metadata:
 
 # Queek bridge
 
-The bridge is Queek's App Bridge equivalent: the dashboard embeds the app
-in an iframe and the two sides talk postMessage. The SDK ships the typed
-helpers — use them, do not hand-roll message strings.
+The bridge is how an embedded app talks to the Queek dashboard: the
+dashboard embeds the app in an iframe and the two sides talk postMessage.
+The SDK ships the typed helpers — use them, do not hand-roll message
+strings.
 
 Read the reference that fits before writing code:
 
