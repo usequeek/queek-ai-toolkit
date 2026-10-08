@@ -11,7 +11,7 @@ metadata:
 The Merchant API is additive under `v1` by POLICY, and the served spec's
 own `info.description` states it verbatim ("Additive-only under v1 … A
 breaking change ships as v2 alongside v1"). Types are generated in the
-app from the live spec with `queek app codegen` (CLI 0.14.0) — never
+app from the live spec with `queek app codegen` (CLI 0.14.0 or later) — never
 bundled with the SDK. Freshness is a manual re-run: types never update on
 their own.
 

@@ -1,11 +1,11 @@
 # Codegen flow
 
-Source: `@usequeek/cli` 0.14.0 `packages/cli/src/commands/app/codegen.ts`
-(`AppCodegen`, released — verify with `queek app codegen --help`).
+Source: `@usequeek/cli` `packages/cli/src/commands/app/codegen.ts`
+(`AppCodegen`; verify with `queek app codegen --help`).
 (Repo: `usequeek/theme-tools`.) This is the reference implementation — reuse
 its logic verbatim; do not invent a second flow.
 
-`queek app codegen` — RELEASED in `@usequeek/cli` 0.14.0. It writes
+`queek app codegen` is available from `@usequeek/cli` 0.14.0. It writes
 app-owned `types/merchant.ts` + the recorded spec hash in
 `.queek/codegen.json` (offline warn + exit 0). The recorded pin is the
 committed `types/merchant.ts` `Spec sha256:` provenance header

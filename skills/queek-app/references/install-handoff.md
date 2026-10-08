@@ -4,7 +4,7 @@ Sources (`usequeek/app-sdk`, SDK 0.6.1): `src/install-handlers.ts`,
 `src/handoff.ts`, `src/hono.ts`, `src/session.ts`, `src/server.ts`,
 `src/app-auth.ts`, `src/tokens.ts`, `src/resync.ts`, `README.md` (sections
 named in each bullet); CLI `src/commands/app/deploy.ts`
-(repo `usequeek/theme-tools`, CLI 0.14.0). Symbols are the contract; line numbers drift.
+(repo `usequeek/theme-tools`). Symbols are the contract; line numbers drift.
 
 ## Order per request: verify first, then parse, then act
 

@@ -58,8 +58,8 @@ Once installed, ask your agent things like:
 ## Accuracy
 
 Every command, endpoint, and field named in a skill comes from the Queek SDK,
-CLI, or API, and each reference file names its source. If the code and a skill
-disagree, the code wins. Please
+CLI, or API, and the references point to where you can check it. If the code
+and a skill disagree, the code wins. Please
 [open an issue](https://github.com/usequeek/queek-ai-toolkit/issues) when you
 find a mismatch.
 
@@ -75,8 +75,10 @@ npm test
 ```
 
 The suite checks that every skill has a valid `SKILL.md` and its reference
-files, that every reference names its source, that the plugin manifests are
-consistent, and that nothing in the repository can report telemetry.
+files, that the plugin manifests are consistent, and that nothing in the
+repository can report telemetry. It also runs `scripts/check-public-text.mjs`,
+which fails on internal references and secret-shaped strings; intentional
+exceptions go in `.public-text-allow` with a reason.
 
 ## Related
 

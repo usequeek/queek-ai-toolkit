@@ -1,6 +1,6 @@
 # Manifest validation rules
 
-Sources: `@usequeek/cli` 0.14.0 `src/lib/app-manifest.ts` (repo:
+Sources: `@usequeek/cli` `src/lib/app-manifest.ts` (repo:
 `usequeek/theme-tools/packages/cli`) and the Queek API's manifest
 validator, which mirrors it. Both validators fail closed: unknown fields
 are rejected, required fields throw.

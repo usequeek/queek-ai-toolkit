@@ -11,6 +11,6 @@
   "keywords": ["queek", "ai", "agent-skills", "claude-code", "codex", "merchant-api"],
   "type": "module",
   "scripts": {
-    "test": "node --test tests/toolkit.test.mjs"
+    "test": "node scripts/check-public-text.mjs && node --test tests/toolkit.test.mjs scripts/check-public-text.test.mjs"
   }
 }

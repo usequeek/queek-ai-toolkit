@@ -4,5 +4,7 @@
   "version": "0.1.0",
   "author": { "name": "Queek" },
   "license": "MIT",
+  "homepage": "https://docs.usequeek.com/docs/apps/ai-toolkit",
+  "repository": "https://github.com/usequeek/queek-ai-toolkit",
   "keywords": ["queek", "merchant-api", "apps", "webhooks", "bridge"]
 }

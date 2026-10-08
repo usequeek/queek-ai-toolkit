@@ -27,7 +27,7 @@ README § API surface (client bullet).
    codegen, unshipped in the published package.
 2. Whenever the Merchant API changes (the live `x-queek-spec-sha` differs
    from the hash your types were generated from), re-run codegen
-   (`queek app codegen [url-or-path]`, CLI 0.14.0) and commit the diff.
+   (`queek app codegen [url-or-path]`, CLI 0.14.0 or later) and commit the diff.
 3. A pinned old snapshot keeps compiling and working; new fields stay
    untyped until you re-run.
 4. What does NOT exist (do not claim it): no CLI stale-types warning

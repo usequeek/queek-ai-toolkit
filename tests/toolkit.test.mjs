@@ -49,21 +49,12 @@ test("every SKILL.md carries name + description frontmatter", () => {
   }
 });
 
-test("every reference file cites the source file it came from", () => {
+test("references point only at public sources, never private files", () => {
   for (const skill of EXPECTED_SKILLS) {
     for (const ref of EXPECTED_REFS[skill]) {
       const body = read(`skills/${skill}/references/${ref}`);
-      assert.match(
-        body,
-        /(usequeek\/app-sdk|usequeek\/theme-tools|usequeek\/queek-app-starter|Queek API)/,
-        `${skill}/${ref} names its public source`,
-      );
-      assert.match(
-        // json|txt: the live capability docs are contract files too
-        body,
-        /`[\w./-]+\.(ts|md|php|toml|mjs|json|txt)(:\d+(-\d+)?)?`/,
-        `${skill}/${ref} cites a source file`,
-      );
+      assert.doesNotMatch(body, /`[\w./-]+\.php`/, `${skill}/${ref} cites a server-side source file`);
+      assert.doesNotMatch(body, /\broutes\/[\w-]+\.php/, `${skill}/${ref} cites a route file`);
     }
   }
 });
@@ -235,24 +226,22 @@ test("README documents the install and update routes", () => {
   assert.doesNotMatch(body, /not yet published/i, "stale unpublished claim gone");
 });
 
-test("codegen is released in CLI 0.14.0 and runnable", () => {
+test("codegen is available from CLI 0.14.0 and runnable", () => {
   const codegen = read("skills/queek-types/references/codegen.md");
-  assert.match(codegen, /RELEASED/, "released status stated");
-  assert.match(codegen, /0\.14\.0/, "released version cited");
+  assert.match(codegen, /0\.14\.0/, "first version cited");
   assert.match(codegen, /queek app codegen/, "runnable command named");
   assert.match(codegen, /packages\/cli\/src\/commands\/app\/codegen\.ts/, "implementation file cited");
   assert.match(codegen, /AppCodegen/, "command class cited");
   assert.match(codegen, /types\/merchant\.ts/, "output file cited");
   assert.match(codegen, /codegen\.json/, "record file cited");
-  assert.doesNotMatch(codegen, /UNRELEASED/, "stale unreleased claim gone");
   assert.doesNotMatch(codegen, /feat\/queek-app/, "branch home gone");
   assert.doesNotMatch(codegen, /39b0bb6/, "branch tip gone");
   assert.doesNotMatch(codegen, /PR #9/, "PR cite gone");
   assert.doesNotMatch(codegen, /0\.13\.0/, "old version gone");
   assert.doesNotMatch(codegen, /never tell an agent to run/, "no-run instruction gone");
   const fresh = read("skills/queek-types/references/freshness.md");
-  assert.match(fresh, /queek app codegen/, "freshness names the released path");
-  assert.match(fresh, /0\.14\.0/, "freshness cites the released version");
+  assert.match(fresh, /queek app codegen/, "freshness names the codegen command");
+  assert.match(fresh, /0\.14\.0/, "freshness cites the first version");
   assert.doesNotMatch(fresh, /feat\/queek-app/, "freshness branch cite gone");
   assert.doesNotMatch(fresh, /0\.13\.0/, "freshness old version gone");
 });
@@ -371,7 +360,7 @@ test("docs URLs mentioned in skills resolve to real contract hosts", () => {
     EXPECTED_REFS[skill].map((ref) => read(`skills/${skill}/references/${ref}`)),
   ).join("\n");
   const urls = [...bodies.matchAll(/https:\/\/([a-z0-9.-]+)/gi)].map((m) => m[1]);
-  const allowed = new Set(["api.usequeek.com", "booking.apps.queek.com.ng", "github.com"]);
+  const allowed = new Set(["api.usequeek.com", "booking.example.com", "github.com"]);
   for (const host of new Set(urls)) {
     assert.ok(allowed.has(host), `unexpected external host: ${host}`);
   }

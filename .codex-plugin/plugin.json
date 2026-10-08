@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Queek developer tools for OpenAI Codex — install handoff and webhook verification, manifest rules, embedded-app bridge, Built for Queek review, Merchant API types. Ships zero telemetry: no skill script or hook posts anywhere.",
   "author": { "name": "Queek" },
-  "homepage": "https://github.com/usequeek/queek-ai-toolkit",
+  "homepage": "https://docs.usequeek.com/docs/apps/ai-toolkit",
   "repository": "https://github.com/usequeek/queek-ai-toolkit",
   "license": "MIT",
   "keywords": ["queek", "merchant-api", "apps", "webhooks", "bridge"],
@@ -15,7 +15,7 @@
     "developerName": "Queek",
     "category": "Productivity",
     "capabilities": ["Read"],
-    "websiteURL": "https://github.com/usequeek/queek-ai-toolkit",
+    "websiteURL": "https://docs.usequeek.com/docs/apps/ai-toolkit",
     "defaultPrompt": [
       "How do I verify the Queek install handoff in a Next.js route?",
       "What scopes and nav items go in queek.app.toml?",

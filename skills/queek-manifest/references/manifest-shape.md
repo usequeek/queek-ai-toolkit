@@ -34,12 +34,12 @@ optional_scopes = ["merchant-items-delete"]
 
 [webhooks]
 topics = ["orders/paid"]
-url = "https://booking.apps.queek.com.ng/webhooks"
+url = "https://booking.example.com/webhooks"
 
 [app]
-install_url = "https://booking.apps.queek.com.ng/install"
-uninstall_url = "https://booking.apps.queek.com.ng/uninstall"
-settings_url = "https://booking.apps.queek.com.ng/settings"
+install_url = "https://booking.example.com/install"
+uninstall_url = "https://booking.example.com/uninstall"
+settings_url = "https://booking.example.com/settings"
 
 [[settings]]
 key = "default_hold_ttl_minutes"
@@ -49,10 +49,10 @@ required = false
 help = "How long a held slot waits for payment before it frees up."
 
 [extensions]
-merchant_page_url = "https://booking.apps.queek.com.ng/admin"
+merchant_page_url = "https://booking.example.com/admin"
 
 [extensions.proxy]
-url = "https://booking.apps.queek.com.ng/proxy"
+url = "https://booking.example.com/proxy"
 subpath = "availability"
 share_customer_id = false
 
@@ -64,7 +64,7 @@ description = "Live availability for this service."
 targets = ["product"]
 # Render only on products that declared a bookable requirement:
 available_if = "declared_products"
-link_url = "https://booking.apps.queek.com.ng/book"
+link_url = "https://booking.example.com/book"
 
 [[extensions.blocks.schema]]
 key = "date"

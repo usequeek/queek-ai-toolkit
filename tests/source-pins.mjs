@@ -1,7 +1,7 @@
 // Pinned source symbols. Every SDK/CLI/API symbol the skills depend on must
 // exist in a checkout at the pinned SHA.
 // Source roots come ONLY from TOOLKIT_SOURCE_ROOTS, either JSON:
-//   TOOLKIT_SOURCE_ROOTS='{"sdk":"/path/to/app-sdk","cli":"/path/to/cli","backend":"/path/to/backend","booking":"/path/to/booking"}'
+//   TOOLKIT_SOURCE_ROOTS='{"sdk":"/path/to/app-sdk","cli":"/path/to/cli"}'
 // or a comma-separated name=path list:
 //   TOOLKIT_SOURCE_ROOTS='sdk=/path/to/app-sdk,cli=/path/to/cli'
 // With no roots configured the guard SKIPS (a fresh clone passes with no
@@ -25,8 +25,6 @@ export function sourceRoots() {
 export const PINS = {
   sdk: "78a5b49fa504ddb47a58d08089f8d84142d3770d",
   cli: "aebd34bc7d7dc944993310d31ff0923bf0dc8748",
-  backend: "bbc82ecbfc0dfd6341b86af0cfaeab6984b8f2df",
-  booking: "1b1c833cc7c698c7822c5adabf647d8ef4717b51",
 };
 
 // {root, file, symbols[]} — files read from the working tree at the pin.
@@ -54,16 +52,4 @@ export const CHECKS = [
   { root: "cli", file: "src/commands/app/codegen.ts", symbols: ["AppCodegen", "types/merchant.ts", "codegen.json", "runCodegen"] },
   { root: "sdk", file: "scripts/gen-merchant-types.mjs", symbols: ["/orders/import", "openapi-typescript", "scramble:export --api=merchant"] },
   { root: "cli", file: "src/lib/app-manifest.ts", symbols: ["TOP_LEVEL_TOML_KEYS", "MANIFEST_KEYS", "optional_scopes", "demo_url", "video_url", "checkNav", "checkExtensions", "checkCappedUrl", "isAllowedVideoHost", "secretProblem", "unknownField", "Unknown field", "EXTENSION_KEYS"] },
-  { root: "booking", file: "queek.app.toml", symbols: ["[[extensions.nav]]", "merchant_page_url", "[[extensions.blocks]]"] },
-  { root: "backend", file: "app/Services/Apps/SubmissionCheckService.php", symbols: ["CHECK_LISTING", "CHECK_TESTED", "CHECK_ENDPOINTS", "CHECK_EMBEDDED_FRAME", "CHECK_DEMO_PRESENCE", "LEVEL_ERROR", "LEVEL_WARNING", "FRESHNESS_HOURS", "WARNING_KEYS", "CHECK_LABELS", "function evaluate", "storedFresh", "isFresh", "listingCheck", "listingMessage", "testedCheck", "embeddedMessage"] },
-  { root: "backend", file: "routes/vendor-api.php", symbols: ["apps/{app}/versions/{sequence}/submission", "apps/{app}/versions/{sequence}/withdraw", "apps/{app}/submit", "vendor/app-store/{slug}/scopes/approve"] },
-  { root: "backend", file: "routes/app-api.php", symbols: ["installations/{installation}/scopes/revoke"] },
-  { root: "backend", file: "app/Http/Controllers/Api/Vendor/Developer/DeveloperAppController.php", symbols: ["public function submission", "public function submitVersion", "public function withdraw", "public function submit"] },
-  { root: "backend", file: "app/Http/Controllers/Api/Vendor/VendorAppController.php", symbols: ["public function approveScopes"] },
-  { root: "backend", file: "app/Http/Controllers/Api/Apps/AppInstallationController.php", symbols: ["public function revokeScopes"] },
-  { root: "backend", file: "app/Services/Apps/AppManifestValidator.php", symbols: ["topLevelKeys", "demo_url", "video_url", "rejectUnknown", "optional_scopes"] },
-  { root: "backend", file: "config/scramble.php", symbols: ["API_VERSION"] },
-  { root: "backend", file: "app/Support/Api/ApiContract.php", symbols: ["VERSION_HEADER", "X-Queek-Api-Version"] },
-  { root: "backend", file: "app/Providers/ScrambleServiceProvider.php", symbols: ["SPEC_SHA_FIELD", "freshness pin"] },
-  { root: "backend", file: "app/Support/Docs/ApiScopes.php", symbols: ["SPEC_SHA_FIELD", "x-queek-spec-sha"] },
 ];
