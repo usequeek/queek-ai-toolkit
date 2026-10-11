@@ -13,7 +13,8 @@ the needs digest; fetch matching needs from the JSON for detail. When
 non-critical and whose status is not `supported`, and report those gaps
 without changing the document's verdict. If `probe`, `probe_pass`, `internal`,
 or `generated_at` are present, ignore them and never cite them. Fields the
-document does not carry are treated as absent.
+document does not carry are treated as absent. Any other field is out of
+scope: never quote or cite it.
 
 Show the developer these sections, in this order. Quote need
 `id`s and the `x-queek-capabilities-sha` revision so the report stays

@@ -5,7 +5,8 @@ Sources: the Queek API live capability docs
 fields: `meta`, `primitives`, `needs[]`, `use_cases[]`). Public
 `surface[]` entries are `{kind,name}` primitives. A matching use case's
 `verdict` and `optional_gaps[{id,status}]` are the document's assessment.
-Fields the document does not carry are treated as absent.
+Fields the document does not carry are treated as absent. Any other
+field is out of scope: never read, quote, or cite it.
 
 Think through every dimension below for the developer's idea, then match
 each one to `needs` by `id` first, `tags` second, `title` last. A
