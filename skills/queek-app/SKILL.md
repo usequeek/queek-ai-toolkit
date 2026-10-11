@@ -2,7 +2,7 @@
 name: queek-app
 description: "Check platform capacity via the queek-capacity skill first, then build a Queek app on the Merchant API: install/uninstall/settings handoff (verify first), Standard Webhooks and app-proxy verification with whsec_ secrets, and the typed Merchant API client over X-Client-Key with Idempotency-Key writes. Use for any Queek app install flow, webhook handler, or Merchant API call."
 metadata:
-  author: Queek
+  author: Queekx Technology LTD
   version: "0.1.0"
 ---
 
@@ -19,7 +19,7 @@ Read the reference file that fits the task before writing code:
 - Calling the Merchant API → `cat references/merchant-client.md`
 - Optional scopes (query / request / revoke, `app/scopes_update`) → `cat references/scopes.md`
 
-SDK entry points (`@usequeek/app-sdk` 0.6.1, `package.json` `exports`):
+SDK entry points (`@usequeek/app-sdk`, from its `package.json` `exports`):
 
 | Import | For | Carries |
 |---|---|---|

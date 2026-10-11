@@ -2,7 +2,7 @@
 name: queek-bridge
 description: "Build embedded Queek app UI over the dashboard bridge: typed postMessage helpers, title bar, toast, save bar, navigation, open, resource picker, and dashboard-following theme mode. Use for any embedded app page, title bar action, picker, or theme wiring."
 metadata:
-  author: Queek
+  author: Queekx Technology LTD
   version: "0.1.0"
 ---
 

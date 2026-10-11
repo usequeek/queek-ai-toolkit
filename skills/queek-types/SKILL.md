@@ -2,7 +2,7 @@
 name: queek-types
 description: "Keep Merchant API types current: regenerate from the live spec with queek app codegen (sanity-checked, diffable output) and re-run whenever the Merchant API changes. Freshness is manual — types never auto-update. Use when the Merchant API gains fields or a call returns untyped data."
 metadata:
-  author: Queek
+  author: Queekx Technology LTD
   version: "0.1.0"
 ---
 

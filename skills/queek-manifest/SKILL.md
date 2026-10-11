@@ -2,7 +2,7 @@
 name: queek-manifest
 description: "Author and validate queek.app.toml: required tables and fields, access scopes, webhooks, app URLs, settings, and extensions (proxy, blocks, merchant_page_url, nav). Use when creating or editing an app manifest, adding scopes, nav items, or storefront blocks."
 metadata:
-  author: Queek
+  author: Queekx Technology LTD
   version: "0.1.0"
 ---
 

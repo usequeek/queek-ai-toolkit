@@ -2,7 +2,7 @@
 name: queek-review
 description: "Pass the Built for Queek review: Queek-theme + bridge UI rule, and the submission checklist contract (listing, tested version, endpoints, embedded page) with item shape {key, level, ok, detail}. Use before submitting an app or fixing an action-required review."
 metadata:
-  author: Queek
+  author: Queekx Technology LTD
   version: "0.1.0"
 ---
 

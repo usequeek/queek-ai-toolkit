@@ -2,7 +2,7 @@
 
 Agent skills for building apps on [Queek](https://usequeek.com). They give your
 coding agent accurate, source-checked knowledge of the install handoff,
-webhooks, the app manifest, the embedded-app bridge, app review, and the typed
+webhooks, the app manifest, the dashboard bridge, app review, and the typed
 Merchant API.
 
 Works with Claude Code and Codex, and with any other agent supported by the
@@ -76,7 +76,10 @@ npm test
 
 The suite checks that every skill has a valid `SKILL.md` and its reference
 files, that the plugin manifests are consistent, and that nothing in the
-repository can report telemetry. It also runs `scripts/check-public-text.mjs`,
+repository can report telemetry. It also pins the capability document shape
+that `queek-capacity` reads (`tests/capabilities-contract.test.mjs`); set
+`CAPABILITIES_JSON` to a downloaded copy of the live document to check that
+shape against it. It also runs `scripts/check-public-text.mjs`,
 which fails on internal references and secret-shaped strings; intentional
 exceptions go in `.public-text-allow` with a reason.
 
