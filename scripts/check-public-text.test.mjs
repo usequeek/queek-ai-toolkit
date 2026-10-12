@@ -19,6 +19,7 @@ const LEAKS = {
   "rendering-bug": word("[object ", "Object]"),
   "plan-id": word("plan ", "T2"),
   "decision-id": word("decision ", "4"),
+  "named-platform": word("works like ", "Shop", "ify"),
 };
 const FAKE_KEY = word("sk", "_", "test", "_", "A1b2C3d4E5f6G7h8");
 
@@ -87,5 +88,12 @@ test("lockfiles, node_modules and binary files are skipped", () => {
   });
   writeFileSync(join(dir, "image.bin"), Buffer.concat([Buffer.from([0, 1, 2]), Buffer.from(LEAKS["internal-repo"])]));
   assert.equal(run(dir).status, 0);
+  rmSync(dir, { recursive: true });
+});
+
+test("named-platform matches whole words only", () => {
+  const dir = repo({ "docs/a.md": `${word("Pa", "ywix")} and ${word("Shopi", "fyable")} are not platform names\n` });
+  const result = run(dir);
+  assert.equal(result.status, 0, result.stderr);
   rmSync(dir, { recursive: true });
 });
