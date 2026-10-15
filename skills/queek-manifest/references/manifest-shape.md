@@ -55,6 +55,7 @@ merchant_page_url = "https://booking.example.com/admin"
 url = "https://booking.example.com/proxy"
 subpath = "availability"
 share_customer_id = false
+allow_post = false
 
 [[extensions.blocks]]
 key = "service_booking"

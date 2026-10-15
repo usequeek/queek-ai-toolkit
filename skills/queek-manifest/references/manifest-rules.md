@@ -50,7 +50,12 @@ flattened manifest shape (28) carries them.
   `merchant_page_url`, `nav` — anything else is an unknown-field error
   (`unknownField`).
 - `extensions.proxy.url` is required when `proxy` is present; allowed proxy
-  keys ONLY: `url`, `subpath`, `share_customer_id`.
+  keys ONLY: `url`, `subpath`, `share_customer_id`, `allow_post`.
+- `extensions.proxy.allow_post` is an optional boolean (default `false`). When
+  `true` and the merchant accepts it, the storefront proxy forwards signed JSON
+  POSTs to the app. The app must verify the signed `method` and `body_sha256`
+  query params and dedupe on `idempotency_key`. Bodies are capped at 65,536
+  bytes; the proxy allows 20 submissions per minute per shopper IP.
 - `extensions.blocks` must be a list of `[[extensions.blocks]]` tables.
 
 ## Dashboard (`checkDashboard`)
